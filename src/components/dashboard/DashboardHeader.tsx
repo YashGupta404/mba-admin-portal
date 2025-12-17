@@ -1,7 +1,8 @@
-import { Search, Bell, Plus } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import NotificationsDropdown from "./NotificationsDropdown";
 
 const DashboardHeader = () => {
   return (
@@ -33,12 +34,7 @@ const DashboardHeader = () => {
         </div>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="w-5 h-5 text-muted-foreground" />
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center">
-            3
-          </span>
-        </Button>
+        <NotificationsDropdown />
 
         {/* Add button */}
         <Button variant="ghost" size="icon">
