@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import EnquiryCard, { Enquiry } from "@/components/contact/EnquiryCard";
+import EnquiryCard from "@/components/contact/EnquiryCard";
 import EnquiryFilters from "@/components/contact/EnquiryFilters";
 import InstitutionContactForm from "@/components/contact/InstitutionContactForm";
 import EnquiryStatistics from "@/components/contact/EnquiryStatistics";
 import { toast } from "@/hooks/use-toast";
+import axios from "axios"
 
-const initialEnquiries: Enquiry[] = [
+// Initial enquiries (no TypeScript types)
+const initialEnquiries = [
     {
         id: "1",
         name: "John Smith",
@@ -82,63 +84,88 @@ const initialEnquiries: Enquiry[] = [
 ];
 
 const ContactEnquiry = () => {
-    const [enquiries, setEnquiries] = useState<Enquiry[]>(initialEnquiries);
+    const [enquiries, setEnquiries] = useState([]);
     const [status, setStatus] = useState("all");
     const [priority, setPriority] = useState("all");
     const [source, setSource] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
+    const [loading,setLoading]=useState(true);
 
-    const handleViewDetails = (id: string) => {
-        const enquiry = enquiries.find((e) => e.id === id);
-        toast({
-            title: "View Details",
-            description: `Opening details for ${enquiry?.name}`,
-        });
-    };
+    useEffect(() => {
+        const fetchdata = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.get("http://localhost:5000/api/enquiry");
+                setEnquiries(response.data.enquiry)
 
-    const handleReply = (id: string) => {
-        const enquiry = enquiries.find((e) => e.id === id);
-        toast({
-            title: "Reply to Enquiry",
-            description: `Opening email client to reply to ${enquiry?.name}`,
-        });
-    };
-
-    const handleMarkResponded = (id: string) => {
-        setEnquiries(
-            enquiries.map((e) =>
-                e.id === id ? { ...e, status: "responded" as const } : e
-            )
-        );
-        toast({
-            title: "Marked as Responded",
-            description: "Enquiry has been marked as responded.",
-        });
-    };
-
-    const handleClose = (id: string) => {
-        const enquiry = enquiries.find((e) => e.id === id);
-        toast({
-            title: "Enquiry Closed",
-            description: `Enquiry from ${enquiry?.name} has been closed.`,
-        });
-    };
-
-    const filteredEnquiries = enquiries.filter((enquiry) => {
-        if (status !== "all" && enquiry.status !== status) return false;
-        if (priority !== "all" && enquiry.priority !== priority) return false;
-        if (source !== "all" && enquiry.source !== source) return false;
-        if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            return (
-                enquiry.name.toLowerCase().includes(query) ||
-                enquiry.email.toLowerCase().includes(query) ||
-                enquiry.subject.toLowerCase().includes(query) ||
-                enquiry.message.toLowerCase().includes(query)
-            );
+            }
+            catch (error) {
+                console.log("Error Fetching data" + error)
+                toast({
+                    title: "Error fetching enquiries",
+                    description: "Cant fetch enquiries from of students"
+                })
+            }
+            finally{
+                setLoading(false)
+            }
         }
-        return true;
-    });
+        fetchdata();
+    }, [])
+
+
+
+    //   const handleViewDetails = (id) => {
+    //     const enquiry = enquiries.find((e) => e.id === id);
+    //     toast({
+    //       title: "View Details",
+    //       description: `Opening details for ${enquiry?.name}`,
+    //     });
+    //   };
+
+    //   const handleReply = (id) => {
+    //     const enquiry = enquiries.find((e) => e.id === id);
+    //     toast({
+    //       title: "Reply to Enquiry",
+    //       description: `Opening email client to reply to ${enquiry?.name}`,
+    //     });
+    //   };
+
+    //   const handleMarkResponded = (id) => {
+    //     setEnquiries(
+    //       enquiries.map((e) =>
+    //         e.id === id ? { ...e, status: "responded" } : e
+    //       )
+    //     );
+    //     toast({
+    //       title: "Marked as Responded",
+    //       description: "Enquiry has been marked as responded.",
+    //     });
+    //   };
+
+    //   const handleClose = (id) => {
+    //     const enquiry = enquiries.find((e) => e.id === id);
+    //     toast({
+    //       title: "Enquiry Closed",
+    //       description: `Enquiry from ${enquiry?.name} has been closed.`,
+    //     });
+    //   };
+
+    //   const filteredEnquiries = enquiries.filter((enquiry) => {
+    //     if (status !== "all" && enquiry.status !== status) return false;
+    //     if (priority !== "all" && enquiry.priority !== priority) return false;
+    //     if (source !== "all" && enquiry.source !== source) return false;
+    //     if (searchQuery) {
+    //       const query = searchQuery.toLowerCase();
+    //       return (
+    //         enquiry.name.toLowerCase().includes(query) ||
+    //         enquiry.email.toLowerCase().includes(query) ||
+    //         enquiry.subject.toLowerCase().includes(query) ||
+    //         enquiry.message.toLowerCase().includes(query)
+    //       );
+    //     }
+    //     return true;
+    //   });
 
     return (
         <div className="p-6 space-y-6">
@@ -189,21 +216,21 @@ const ContactEnquiry = () => {
 
                     {/* Enquiries List */}
                     <div className="space-y-4">
-                        {filteredEnquiries.length > 0 ? (
-                            filteredEnquiries.map((enquiry) => (
+                        {loading ? (
+                            <div className="text-center text-muted-foreground text-sm py-10">
+                                Loading enquiries...
+                            </div>
+                        ) : enquiries.length === 0 ? (
+                            <div className="text-center text-muted-foreground text-sm py-10">
+                                No enquiries found
+                            </div>
+                        ) : (
+                            [...enquiries].reverse().map((enquiry,index) => (
                                 <EnquiryCard
-                                    key={enquiry.id}
+                                    key={index}
                                     enquiry={enquiry}
-                                    onViewDetails={handleViewDetails}
-                                    onReply={handleReply}
-                                    onMarkResponded={handleMarkResponded}
-                                    onClose={handleClose}
                                 />
                             ))
-                        ) : (
-                            <div className="text-center py-12 bg-card rounded-lg border border-border">
-                                <p className="text-muted-foreground">No enquiries found</p>
-                            </div>
                         )}
                     </div>
                 </TabsContent>
@@ -215,7 +242,8 @@ const ContactEnquiry = () => {
                                 onSave={(data) => {
                                     toast({
                                         title: "Contact Information Saved",
-                                        description: "Institution contact information has been updated successfully.",
+                                        description:
+                                            "Institution contact information has been updated successfully.",
                                     });
                                 }}
                             />
