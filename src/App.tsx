@@ -9,6 +9,10 @@ import CoursesManagement from "./pages/CoursesManagement";
 import FacultyManagement from "./pages/FacultyManagement";
 import Admissions from "./pages/Admissions";
 import ContactEnquiry from "./pages/ContactEnquiry";
+import StudentLife from "./pages/StudentLife";
+import Placements from "./pages/Placements";
+import Analytics from "./pages/Analytics";
+import Settings from "./pages/Settings";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import NotFound from "./pages/NotFound";
 
@@ -27,7 +31,11 @@ const App = () => (
             <Route path="courses" element={<CoursesManagement />} />
             <Route path="faculty" element={<FacultyManagement />} />
             <Route path="admissions" element={<Admissions />} />
+            <Route path="analytics" element={<Analytics />} />
             <Route path="contact" element={<ContactEnquiry />} />
+            <Route path="student-life" element={<StudentLife />} />
+            <Route path="placements" element={<Placements />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
