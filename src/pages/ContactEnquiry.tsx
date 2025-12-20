@@ -24,63 +24,7 @@ const initialEnquiries = [
         message:
             "I am interested in applying for the MBA program. Could you please provide more information about the admission requirements and deadlines?",
         received: "2024-01-16",
-    },
-    {
-        id: "2",
-        name: "Sarah Johnson",
-        email: "sarah.j@email.com",
-        phone: "+1 (555) 234-5678",
-        date: "2024-01-15",
-        status: "responded",
-        priority: "medium",
-        source: "email",
-        subject: "Course Information",
-        message:
-            "I would like to know more about the Finance specialization courses and faculty members.",
-        received: "2024-01-15",
-    },
-    {
-        id: "3",
-        name: "Michael Chen",
-        email: "michael.c@email.com",
-        phone: "+1 (555) 345-6789",
-        date: "2024-01-14",
-        status: "in-progress",
-        priority: "medium",
-        source: "phone",
-        subject: "Scholarship Information",
-        message:
-            "Are there any scholarship opportunities available for international students?",
-        received: "2024-01-14",
-    },
-    {
-        id: "4",
-        name: "Emily Rodriguez",
-        email: "emily.r@email.com",
-        phone: "+1 (555) 456-7890",
-        date: "2024-01-13",
-        status: "new",
-        priority: "low",
-        source: "social-media",
-        subject: "Campus Visit Request",
-        message:
-            "I would like to schedule a campus visit to learn more about the facilities and programs.",
-        received: "2024-01-13",
-    },
-    {
-        id: "5",
-        name: "David Kim",
-        email: "david.k@email.com",
-        phone: "+1 (555) 567-8901",
-        date: "2024-01-12",
-        status: "responded",
-        priority: "high",
-        source: "website",
-        subject: "Application Status",
-        message:
-            "I submitted my application last month. Can you provide an update on the status?",
-        received: "2024-01-12",
-    },
+    }
 ];
 
 const ContactEnquiry = () => {
@@ -89,7 +33,7 @@ const ContactEnquiry = () => {
     const [priority, setPriority] = useState("all");
     const [source, setSource] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
-    const [loading,setLoading]=useState(true);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchdata = async () => {
@@ -106,7 +50,7 @@ const ContactEnquiry = () => {
                     description: "Cant fetch enquiries from of students"
                 })
             }
-            finally{
+            finally {
                 setLoading(false)
             }
         }
@@ -123,13 +67,12 @@ const ContactEnquiry = () => {
     //     });
     //   };
 
-    //   const handleReply = (id) => {
-    //     const enquiry = enquiries.find((e) => e.id === id);
-    //     toast({
-    //       title: "Reply to Enquiry",
-    //       description: `Opening email client to reply to ${enquiry?.name}`,
-    //     });
-    //   };
+    const handleReply = (id) => {
+        const enquiry = enquiries.find((e) => e._id === id);
+        if (!enquiry) return;
+
+        
+    };
 
     //   const handleMarkResponded = (id) => {
     //     setEnquiries(
@@ -225,10 +168,11 @@ const ContactEnquiry = () => {
                                 No enquiries found
                             </div>
                         ) : (
-                            [...enquiries].reverse().map((enquiry,index) => (
+                            [...enquiries].reverse().map((enquiry, index) => (
                                 <EnquiryCard
                                     key={index}
                                     enquiry={enquiry}
+                                    onReply={handleReply}
                                 />
                             ))
                         )}

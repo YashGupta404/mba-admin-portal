@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 //   "social-media": Globe,
 // };
 //const EnquiryCard = ({ enquiry, onViewDetails, onReply, onMarkResponded, onClose }) => {
-const EnquiryCard = ({ enquiry }) => {
+const EnquiryCard = ({ enquiry,onReply }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   //const SourceIcon = sourceIcons[enquiry.source] || Globe;
   const date=new Date(enquiry.date);
@@ -54,8 +54,8 @@ const EnquiryCard = ({ enquiry }) => {
             </div>
             <div className="flex items-center gap-1">
               <Phone className="w-4 h-4" />
-              <a href={`tel:${enquiry.phone}`} className="underline">
-                {enquiry.phone}
+              <a href={`tel:${enquiry.mobile}`} className="underline">
+                {enquiry.mobile}
               </a>
             </div>
             <div className="flex items-center gap-1">
@@ -114,14 +114,14 @@ const EnquiryCard = ({ enquiry }) => {
             </>
           )}
         </Button>
-        {/* <Button
+        <Button
           variant="link"
           size="sm"
           className="text-blue-600 hover:text-blue-700"
-          onClick={() => onReply(enquiry.id)}
+          onClick={() => onReply(enquiry._id)}
         >
           Reply
-        </Button> */}
+        </Button> 
       </div>
     </div>
   );
