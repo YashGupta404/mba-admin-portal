@@ -1,39 +1,43 @@
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface MetricCardProps {
-    icon: React.ReactNode;
     title: string;
     value: string;
     change: string;
-    changeLabel: string;
-    isPositive: boolean;
-    iconBgColor: string;
+    icon: React.ReactNode;
+    iconColor: string;
+    subtitle: string;
 }
 
 const MetricCard = ({
-    icon,
     title,
     value,
     change,
-    changeLabel,
-    isPositive,
-    iconBgColor,
+    icon,
+    iconColor,
+    subtitle,
 }: MetricCardProps) => {
+    const isPositive = change.startsWith("+");
+
     return (
-        <div className="bg-card rounded-lg border border-border p-6 hover:shadow-md transition-shadow">
-            <div className="flex items-start justify-between mb-4">
-                <div className={`w-10 h-10 rounded-lg ${iconBgColor} flex items-center justify-center`}>
-                    {icon}
+        <Card>
+            <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                    <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center", iconColor)}>
+                        {icon}
+                    </div>
+                    <span className={cn("text-sm font-semibold", isPositive ? "text-emerald-600" : "text-red-600")}>
+                        {change}
+                    </span>
                 </div>
-                <div className={`flex items-center gap-1 text-sm font-medium ${isPositive ? "text-emerald-600" : "text-red-600"}`}>
-                    {isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
-                    {change}
+                <div>
+                    <p className="text-sm text-muted-foreground mb-1">{title}</p>
+                    <h3 className="text-3xl font-bold text-foreground mb-1">{value}</h3>
+                    <p className="text-xs text-muted-foreground">{subtitle}</p>
                 </div>
-            </div>
-            <p className="text-sm text-muted-foreground mb-1">{title}</p>
-            <p className="text-3xl font-bold text-foreground mb-1">{value}</p>
-            <p className="text-xs text-muted-foreground">{changeLabel}</p>
-        </div>
+            </CardContent>
+        </Card>
     );
 };
 

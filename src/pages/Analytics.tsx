@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DollarSign, Star, GraduationCap, Briefcase, Download } from "lucide-react";
+import { Download, DollarSign, Star, GraduationCap, Users, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Select,
@@ -8,22 +8,125 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MetricCard from "@/components/analytics/MetricCard";
-import EnrollmentChart from "@/components/analytics/EnrollmentChart";
-import RevenueChart from "@/components/analytics/RevenueChart";
-import DepartmentPerformance from "@/components/analytics/DepartmentPerformance";
-import RecentReports from "@/components/analytics/RecentReports";
+import DepartmentPerformanceSection, {
+    DepartmentPerformance,
+} from "@/components/analytics/DepartmentPerformance";
+import RecentReports, { Report } from "@/components/analytics/RecentReports";
 import { toast } from "@/hooks/use-toast";
 
+const departments: DepartmentPerformance[] = [
+    {
+        id: "1",
+        name: "Finance",
+        students: 420,
+        revenue: "$840K",
+        satisfaction: 4.9,
+        color: "bg-blue-500",
+    },
+    {
+        id: "2",
+        name: "Marketing",
+        students: 380,
+        revenue: "$760K",
+        satisfaction: 4.8,
+        color: "bg-emerald-500",
+    },
+    {
+        id: "3",
+        name: "Operations",
+        students: 290,
+        revenue: "$580K",
+        satisfaction: 4.7,
+        color: "bg-orange-500",
+    },
+    {
+        id: "4",
+        name: "HR",
+        students: 157,
+        revenue: "$314K",
+        satisfaction: 4.6,
+        color: "bg-purple-500",
+    },
+];
+
+const reports: Report[] = [
+    {
+        id: "1",
+        name: "Q4 2024 Enrollment Report",
+        date: "2024-01-15",
+        type: "PDF",
+        size: "2.4 MB",
+        downloads: 45,
+    },
+    {
+        id: "2",
+        name: "Faculty Performance Analysis",
+        date: "2024-01-10",
+        type: "Excel",
+        size: "1.8 MB",
+        downloads: 32,
+    },
+    {
+        id: "3",
+        name: "Student Satisfaction Survey",
+        date: "2024-01-08",
+        type: "PDF",
+        size: "3.1 MB",
+        downloads: 67,
+    },
+    {
+        id: "4",
+        name: "Placement Statistics 2024",
+        date: "2024-01-05",
+        type: "PDF",
+        size: "1.5 MB",
+        downloads: 89,
+    },
+];
+
 const Analytics = () => {
-    const [timeRange, setTimeRange] = useState("Last 12 Months");
-    const [enrollmentPeriod, setEnrollmentPeriod] = useState("Monthly");
-    const [revenueGroupBy, setRevenueGroupBy] = useState("By Department");
+    const [timeRange, setTimeRange] = useState("last-12-months");
+    const [enrollmentPeriod, setEnrollmentPeriod] = useState("monthly");
+    const [revenueFilter, setRevenueFilter] = useState("by-department");
 
     const handleExportReport = () => {
         toast({
-            title: "Export Report",
-            description: "Generating comprehensive analytics report...",
+            title: "Exporting Report",
+            description: "Your analytics report is being generated...",
+        });
+    };
+
+    const handleGenerateReport = () => {
+        toast({
+            title: "Generate Report",
+            description: "Opening report generation wizard...",
+        });
+    };
+
+    const handleDownloadReport = (id: string) => {
+        const report = reports.find((r) => r.id === id);
+        toast({
+            title: "Downloading Report",
+            description: `Downloading ${report?.name}...`,
+        });
+    };
+
+    const handleShareReport = (id: string) => {
+        const report = reports.find((r) => r.id === id);
+        toast({
+            title: "Share Report",
+            description: `Sharing ${report?.name}...`,
+        });
+    };
+
+    const handleDeleteReport = (id: string) => {
+        const report = reports.find((r) => r.id === id);
+        toast({
+            title: "Delete Report",
+            description: `${report?.name} has been deleted.`,
+            variant: "destructive",
         });
     };
 
@@ -32,28 +135,30 @@ const Analytics = () => {
             {/* Header */}
             <div className="flex items-start justify-between">
                 <div>
-                    <h1 className="text-2xl font-semibold text-foreground">Analytics & Reports</h1>
+                    <h1 className="text-2xl font-semibold text-foreground">
+                        Analytics & Reports
+                    </h1>
                     <p className="text-muted-foreground text-sm mt-1">
                         Comprehensive insights and performance metrics
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex gap-2">
                     <Select value={timeRange} onValueChange={setTimeRange}>
-                        <SelectTrigger className="w-[160px] bg-background border-border">
-                            <SelectValue placeholder="Last 12 Months" />
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue />
                         </SelectTrigger>
-                        <SelectContent className="bg-popover border-border">
-                            <SelectItem value="Last 12 Months">Last 12 Months</SelectItem>
-                            <SelectItem value="Last 6 Months">Last 6 Months</SelectItem>
-                            <SelectItem value="Last 3 Months">Last 3 Months</SelectItem>
-                            <SelectItem value="Custom Range">Custom Range</SelectItem>
+                        <SelectContent>
+                            <SelectItem value="last-12-months">Last 12 Months</SelectItem>
+                            <SelectItem value="last-6-months">Last 6 Months</SelectItem>
+                            <SelectItem value="last-3-months">Last 3 Months</SelectItem>
+                            <SelectItem value="custom">Custom Range</SelectItem>
                         </SelectContent>
                     </Select>
                     <Button
                         onClick={handleExportReport}
-                        className="bg-primary text-primary-foreground hover:bg-primary/90"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
                     >
-                        <Download className="w-4 h-4 mr-2" />
+                        <Download className="w-4 h-4" />
                         Export Report
                     </Button>
                 </div>
@@ -62,54 +167,113 @@ const Analytics = () => {
             {/* Metric Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <MetricCard
-                    icon={<DollarSign className="w-5 h-5 text-emerald-600" />}
                     title="Total Revenue"
                     value="$2.4M"
                     change="+15.3%"
-                    changeLabel="vs last year"
-                    isPositive={true}
-                    iconBgColor="bg-emerald-100 dark:bg-emerald-900/30"
+                    subtitle="vs last year"
+                    icon={<DollarSign className="w-6 h-6 text-white" />}
+                    iconColor="bg-emerald-500"
                 />
                 <MetricCard
-                    icon={<Star className="w-5 h-5 text-yellow-600" />}
                     title="Student Satisfaction"
                     value="4.8/5"
-                    change="+0.2"
-                    changeLabel="vs last semester"
-                    isPositive={true}
-                    iconBgColor="bg-yellow-100 dark:bg-yellow-900/30"
+                    change="+8.2"
+                    subtitle="vs last semester"
+                    icon={<Star className="w-6 h-6 text-white" />}
+                    iconColor="bg-yellow-500"
                 />
                 <MetricCard
-                    icon={<GraduationCap className="w-5 h-5 text-blue-600" />}
                     title="Course Completion"
                     value="92.5%"
                     change="+5.1%"
-                    changeLabel="vs last year"
-                    isPositive={true}
-                    iconBgColor="bg-blue-100 dark:bg-blue-900/30"
+                    subtitle="vs last year"
+                    icon={<GraduationCap className="w-6 h-6 text-white" />}
+                    iconColor="bg-blue-500"
                 />
                 <MetricCard
-                    icon={<Briefcase className="w-5 h-5 text-purple-600" />}
-                    title="Employment Rate"
+                    title="Enrollment Rate"
                     value="94.2%"
                     change="+2.8%"
-                    changeLabel="within 6 months"
-                    isPositive={true}
-                    iconBgColor="bg-purple-100 dark:bg-purple-900/30"
+                    subtitle="within 6 months"
+                    icon={<Users className="w-6 h-6 text-white" />}
+                    iconColor="bg-purple-500"
                 />
             </div>
 
             {/* Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <EnrollmentChart period={enrollmentPeriod} onPeriodChange={setEnrollmentPeriod} />
-                <RevenueChart groupBy={revenueGroupBy} onGroupByChange={setRevenueGroupBy} />
+                {/* Enrollment Trends */}
+                <Card>
+                    <CardHeader>
+                        <div className="flex items-center justify-between">
+                            <CardTitle className="text-lg">Enrollment Trends</CardTitle>
+                            <Select value={enrollmentPeriod} onValueChange={setEnrollmentPeriod}>
+                                <SelectTrigger className="w-[120px]">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="monthly">Monthly</SelectItem>
+                                    <SelectItem value="quarterly">Quarterly</SelectItem>
+                                    <SelectItem value="yearly">Yearly</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex items-center justify-center h-64 bg-muted/30 rounded-lg border-2 border-dashed border-border">
+                            <div className="text-center">
+                                <TrendingUp className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
+                                <p className="text-sm font-medium text-foreground">Enrollment Chart</p>
+                                <p className="text-xs text-muted-foreground">
+                                    Interactive chart showing enrollment trends over time
+                                </p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Revenue Analysis */}
+                <Card>
+                    <CardHeader>
+                        <div className="flex items-center justify-between">
+                            <CardTitle className="text-lg">Revenue Analysis</CardTitle>
+                            <Select value={revenueFilter} onValueChange={setRevenueFilter}>
+                                <SelectTrigger className="w-[160px]">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="by-department">By Department</SelectItem>
+                                    <SelectItem value="by-program">By Program</SelectItem>
+                                    <SelectItem value="by-semester">By Semester</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex items-center justify-center h-64 bg-muted/30 rounded-lg border-2 border-dashed border-border">
+                            <div className="text-center">
+                                <DollarSign className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
+                                <p className="text-sm font-medium text-foreground">Revenue Chart</p>
+                                <p className="text-xs text-muted-foreground">
+                                    Bar chart showing revenue breakdown
+                                </p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Department Performance */}
-            <DepartmentPerformance />
+            <DepartmentPerformanceSection departments={departments} />
 
             {/* Recent Reports */}
-            <RecentReports />
+            <RecentReports
+                reports={reports}
+                onDownload={handleDownloadReport}
+                onShare={handleShareReport}
+                onDelete={handleDeleteReport}
+                onGenerate={handleGenerateReport}
+            />
         </div>
     );
 };

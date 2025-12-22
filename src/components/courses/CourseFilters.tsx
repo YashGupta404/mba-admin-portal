@@ -43,6 +43,7 @@ const CourseFilters = ({
             <SelectItem value="marketing">Marketing</SelectItem>
             <SelectItem value="operations">Operations</SelectItem>
             <SelectItem value="hr">Human Resources</SelectItem>
+            <SelectItem value="technology">Technology Management</SelectItem>
           </SelectContent>
         </Select>
 

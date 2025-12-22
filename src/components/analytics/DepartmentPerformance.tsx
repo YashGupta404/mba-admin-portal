@@ -1,6 +1,8 @@
-import { Star } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
-interface DepartmentData {
+export interface DepartmentPerformance {
+    id: string;
     name: string;
     students: number;
     revenue: string;
@@ -8,46 +10,59 @@ interface DepartmentData {
     color: string;
 }
 
-const departments: DepartmentData[] = [
-    { name: "Finance", students: 420, revenue: "$840K", satisfaction: 4.9, color: "bg-blue-500" },
-    { name: "Marketing", students: 380, revenue: "$760K", satisfaction: 4.8, color: "bg-emerald-500" },
-    { name: "Operations", students: 290, revenue: "$580K", satisfaction: 4.7, color: "bg-orange-500" },
-    { name: "HR", students: 157, revenue: "$314K", satisfaction: 4.6, color: "bg-purple-500" },
-];
+interface DepartmentCardProps {
+    department: DepartmentPerformance;
+}
 
-const DepartmentPerformance = () => {
+const DepartmentCard = ({ department }: DepartmentCardProps) => {
     return (
-        <div className="bg-card rounded-lg border border-border p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-6">Department Performance</h3>
+        <Card>
+            <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                    <div
+                        className={cn("w-3 h-3 rounded-full", department.color)}
+                    />
+                    <h4 className="font-semibold text-foreground">{department.name}</h4>
+                </div>
+                <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Students:</span>
+                        <span className="font-semibold text-foreground">{department.students}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Revenue:</span>
+                        <span className="font-semibold text-foreground">{department.revenue}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Satisfaction:</span>
+                        <span className="font-semibold text-foreground flex items-center gap-1">
+                            {department.satisfaction}
+                            <span className="text-yellow-500">⭐</span>
+                        </span>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+interface DepartmentPerformanceProps {
+    departments: DepartmentPerformance[];
+}
+
+const DepartmentPerformanceSection = ({ departments }: DepartmentPerformanceProps) => {
+    return (
+        <div>
+            <h3 className="text-lg font-semibold text-foreground mb-4">
+                Department Performance
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {departments.map((dept) => (
-                    <div key={dept.name} className="space-y-3">
-                        <div className="flex items-center gap-2">
-                            <div className={`w-3 h-3 rounded-full ${dept.color}`} />
-                            <h4 className="font-semibold text-foreground">{dept.name}</h4>
-                        </div>
-                        <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
-                                <span className="text-muted-foreground">Students:</span>
-                                <span className="font-medium text-foreground">{dept.students}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-muted-foreground">Revenue:</span>
-                                <span className="font-medium text-foreground">{dept.revenue}</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-muted-foreground">Satisfaction:</span>
-                                <div className="flex items-center gap-1">
-                                    <span className="font-medium text-foreground">{dept.satisfaction}</span>
-                                    <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <DepartmentCard key={dept.id} department={dept} />
                 ))}
             </div>
         </div>
     );
 };
 
-export default DepartmentPerformance;
+export default DepartmentPerformanceSection;
