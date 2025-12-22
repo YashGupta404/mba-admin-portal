@@ -6,6 +6,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import CoursesManagement from "./pages/CoursesManagement";
+import FacultyManagement from "./components/faculty_management/FacultyManagement";
+import Admissions from "./pages/Admissions";
+import Analytics from "./pages/Analytics";
+import Settings from "./pages/Settings";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import NotFound from "./pages/NotFound";
 
@@ -22,6 +26,10 @@ const App = () => (
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="courses" element={<CoursesManagement />} />
+            <Route path="faculty" element={<FacultyManagement />} />
+            <Route path="admissions" element={<Admissions />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

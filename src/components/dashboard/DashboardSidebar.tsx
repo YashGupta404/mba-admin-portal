@@ -44,30 +44,40 @@ const DashboardSidebar = ({ collapsed, onToggle }: DashboardSidebarProps) => {
         collapsed ? "w-16" : "w-64"
       )}
     >
-      {/* Header */}
-      <div className="p-4 flex items-center gap-3 border-b border-sidebar-border">
-        <div className="w-10 h-10 rounded-xl bg-sidebar-accent flex items-center justify-center flex-shrink-0">
-          <div className="flex gap-0.5">
-            <div className="w-1 h-2.5 bg-sidebar-foreground rounded-sm"></div>
-            <div className="w-1 h-4 bg-primary rounded-sm"></div>
-            <div className="w-1 h-3 bg-sidebar-foreground rounded-sm"></div>
-          </div>
-        </div>
-        {!collapsed && (
-          <div className="animate-fade-in">
-            <h2 className="text-sidebar-foreground font-semibold text-sm">MBA Institute</h2>
-            <p className="text-sidebar-muted text-xs">Admin Panel</p>
-          </div>
-        )}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onToggle}
-          className="ml-auto text-sidebar-foreground hover:bg-sidebar-accent h-8 w-8"
-        >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-        </Button>
-      </div>
+{/* Header */}
+<div className="p-4 flex items-center gap-3 border-b border-sidebar-border">
+  {/* Logo */}
+  <img
+    src="/src/assets/mba_logo.png"
+    alt="MBA Logo"
+    className="h-8 w-8 object-contain"
+  />
+
+  {/* Brand text */}
+  {!collapsed && (
+    <div className="animate-fade-in leading-tight">
+      <h2 className="text-sidebar-foreground font-semibold text-sm">
+        Institute of Engineering & Management
+      </h2>
+      <p className="text-sidebar-muted text-xs">Admin Panel</p>
+    </div>
+  )}
+
+  {/* Collapse toggle */}
+  <Button
+    variant="ghost"
+    size="icon"
+    onClick={onToggle}
+    className="ml-auto text-sidebar-foreground hover:bg-sidebar-accent h-8 w-8"
+  >
+    {collapsed ? (
+      <ChevronRight className="w-4 h-4" />
+    ) : (
+      <ChevronLeft className="w-4 h-4" />
+    )}
+  </Button>
+</div>
+
 
       {/* Navigation */}
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
