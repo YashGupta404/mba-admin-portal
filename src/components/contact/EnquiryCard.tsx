@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Mail, Phone, Calendar, Globe, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  Calendar,
+  Globe,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -24,11 +31,22 @@ const sourceIcons = {
   "social-media": Globe,
 };
 //const EnquiryCard = ({ enquiry, onViewDetails, onReply, onMarkResponded, onClose }) => {
-const EnquiryCard = ({ enquiry,onViewDetails,onReply,onMarkResponded,onClose }) => {
+const EnquiryCard = ({
+  enquiry,
+  onViewDetails,
+  onReply,
+  onMarkResponded,
+  onClose,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const SourceIcon = sourceIcons[enquiry.source] || Globe;
-  const date=new Date(enquiry.date);
-
+  const date = new Date(enquiry.date);
+  const handleclick = () => {
+    if (!isExpanded && enquiry.status === "new") {
+      onViewDetails(enquiry._id); // call only once
+    }
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <div className="bg-card rounded-lg border border-border p-5 hover:shadow-md transition-shadow">
@@ -36,10 +54,14 @@ const EnquiryCard = ({ enquiry,onViewDetails,onReply,onMarkResponded,onClose }) 
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <h4 className="font-semibold text-foreground">{enquiry.name}</h4>
-            <Badge className={cn("border text-xs", statusColors[enquiry.status])}>
+            <Badge
+              className={cn("border text-xs", statusColors[enquiry.status])}
+            >
               {enquiry.status}
             </Badge>
-            <Badge className={cn("border text-xs", priorityColors[enquiry.priority])}>
+            <Badge
+              className={cn("border text-xs", priorityColors[enquiry.priority])}
+            >
               {enquiry.priority}
             </Badge>
             <SourceIcon className="w-4 h-4 text-muted-foreground" />
@@ -65,14 +87,20 @@ const EnquiryCard = ({ enquiry,onViewDetails,onReply,onMarkResponded,onClose }) 
           </div>
 
           <div className="mb-3">
-            <h5 className="font-medium text-foreground text-sm mb-1">{enquiry.subject}</h5>
-            <p className="text-sm text-muted-foreground line-clamp-2">{enquiry.message}</p>
+            <h5 className="font-medium text-foreground text-sm mb-1">
+              {enquiry.subject}
+            </h5>
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {enquiry.message}
+            </p>
           </div>
 
           {isExpanded && (
             <div className="mt-4 p-4 bg-muted/30 rounded-lg border border-border">
               <h6 className="font-semibold text-sm mb-2">Full Message:</h6>
-              <p className="text-sm text-muted-foreground mb-3">{enquiry.message}</p>
+              <p className="text-sm text-muted-foreground mb-3">
+                {enquiry.message}
+              </p>
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 <span>Received: {enquiry.received}</span>
                 <span>Source: {enquiry.source}</span>
@@ -86,7 +114,11 @@ const EnquiryCard = ({ enquiry,onViewDetails,onReply,onMarkResponded,onClose }) 
                 >
                   Mark as Responded
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => onClose(enquiry.id)}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onClose(enquiry.id)}
+                >
                   Close Enquiry
                 </Button>
               </div>
@@ -100,7 +132,7 @@ const EnquiryCard = ({ enquiry,onViewDetails,onReply,onMarkResponded,onClose }) 
           variant="link"
           size="sm"
           className="text-emerald-600 hover:text-emerald-700 px-0"
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={handleclick}
         >
           {isExpanded ? (
             <>
@@ -121,7 +153,7 @@ const EnquiryCard = ({ enquiry,onViewDetails,onReply,onMarkResponded,onClose }) 
           onClick={() => onReply(enquiry._id)}
         >
           Reply
-        </Button> 
+        </Button>
       </div>
     </div>
   );

@@ -53,9 +53,12 @@ const ContactEnquiry = () => {
   const fetchdataspecific = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/api/enquiry/search",{
-        params: { search: searchQuery }
-      });
+      const response = await axios.get(
+        "http://localhost:5000/api/enquiry/search",
+        {
+          params: { search: searchQuery },
+        }
+      );
       setEnquiries(response.data.display);
     } catch (error) {
       console.log("Error searching data" + error);
@@ -69,24 +72,41 @@ const ContactEnquiry = () => {
   };
 
   useEffect(() => {
-  const delayDebounce = setTimeout(() => {
-    if (searchQuery.trim() === "") {
-      fetchdataall(); // reload all data
-    } else {
-      fetchdataspecific(); // search
+    const delayDebounce = setTimeout(() => {
+      if (searchQuery.trim() === "") {
+        fetchdataall(); // reload all data
+      } else {
+        fetchdataspecific(); // search
+      }
+    }, 1000); // debounce (ms)
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
+
+  const handleViewDetails = async (id) => {
+    try {
+      const enquiry = enquiries.find((e) => e._id === id);
+      if (!enquiry) return;
+
+      if (enquiry.status !== "new") return;
+
+      const response = await axios.put(
+        `http://localhost:5000/api/enquiry/status/${id}`,
+        {
+          status: "in-progress",
+        }
+      );
+      // Update status in UI (React state)
+      setEnquiries((prev) =>
+        prev.map((e) => (e._id === id ? { ...e, status: "in-progress" } : e))
+      );
+    } catch (error) {
+      console.log("Error updating status" + error);
+      toast({
+        title: "Error updating enquiry status",
+        description: "Cant update status of the enquiry",
+      });
     }
-  }, 1000); // debounce (ms)
-
-  return () => clearTimeout(delayDebounce);
-}, [searchQuery]);
-
-
-  const handleViewDetails = (id) => {
-    const enquiry = enquiries.find((e) => e.id === id);
-    toast({
-      title: "View Details",
-      description: `Opening details for ${enquiry?.name}`,
-    });
   };
 
   const handleReply = (id) => {
@@ -174,7 +194,6 @@ const ContactEnquiry = () => {
             onPriorityChange={setPriority}
             onSourceChange={setSource}
             onSearchChange={setSearchQuery}
-           
           />
 
           {/* Enquiries List */}
