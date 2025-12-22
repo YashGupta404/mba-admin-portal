@@ -19,26 +19,9 @@ const EnquiryFilters = ({
   onPriorityChange,
   onSourceChange,
   onSearchChange,
-  onSearchSubmit,
-}) => {
-  const handlechange = (e) => {
-    console.log(e.target.name, e.target.value);
-    onSearchChange(e.target.value);
-  };
 
-  const handlesubmit = async (e) => {
-    e.preventDefault();
-    console.log("Submitted", searchQuery);
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/api/enquiry/search?search=${searchQuery}`
-      );
-      onSearchSubmit(response.data.display);
-    } catch (error) {
-      console.log("Error in submitting search" + error);
-      window.location.reload();
-    }
-  };
+}) => {
+  
 
   return (
     <div className="flex flex-wrap items-center gap-4 p-4 bg-card rounded-lg border border-border">
@@ -83,7 +66,7 @@ const EnquiryFilters = ({
       </Select>
 
       {/* Search */}
-      <form onSubmit={handlesubmit} className="relative flex-1 min-w-[250px]">
+      <form className="relative flex-1 min-w-[250px]">
         <button
           type="submit"
           className="absolute left-3 top-1/2 -translate-y-1/2 w-auto h-auto text-muted-foreground"
@@ -94,7 +77,7 @@ const EnquiryFilters = ({
           placeholder="Search enquiries..."
           name="search"
           value={searchQuery}
-          onChange={handlechange}
+          onChange={(e) => onSearchChange(e.target.value)}
           className="pl-9"
         />
       </form>

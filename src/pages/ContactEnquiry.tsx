@@ -44,7 +44,24 @@ const ContactEnquiry = () => {
       console.log("Error Fetching data" + error);
       toast({
         title: "Error fetching enquiries",
-        description: "Cant fetch enquiries from of students",
+        description: "Cant fetch enquiries of students",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchdataspecific = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("http://localhost:5000/api/enquiry/search",{
+        params: { search: searchQuery }
+      });
+      setEnquiries(response.data.display);
+    } catch (error) {
+      console.log("Error searching data" + error);
+      toast({
+        title: "Error search specific enquiries",
+        description: "Cant search specific enquiries of students",
       });
     } finally {
       setLoading(false);
@@ -52,9 +69,17 @@ const ContactEnquiry = () => {
   };
 
   useEffect(() => {
-    if(searchQuery==="")
-    fetchdataall();
-  }, []);
+  const delayDebounce = setTimeout(() => {
+    if (searchQuery.trim() === "") {
+      fetchdataall(); // reload all data
+    } else {
+      fetchdataspecific(); // search
+    }
+  }, 1000); // debounce (ms)
+
+  return () => clearTimeout(delayDebounce);
+}, [searchQuery]);
+
 
   const handleViewDetails = (id) => {
     const enquiry = enquiries.find((e) => e.id === id);
@@ -149,7 +174,7 @@ const ContactEnquiry = () => {
             onPriorityChange={setPriority}
             onSourceChange={setSource}
             onSearchChange={setSearchQuery}
-            onSearchSubmit={setEnquiries}
+           
           />
 
           {/* Enquiries List */}
