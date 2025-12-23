@@ -23,9 +23,11 @@ export interface EventFormData {
     date: string;
     time: string;
     category: string;
+    status: string;
     expectedAttendees: string;
     description: string;
     location: string;
+    image?: string;
 }
 
 interface CreateEventModalProps {
@@ -44,9 +46,11 @@ const CreateEventModal = ({
         date: "",
         time: "",
         category: "",
+        status: "upcoming",
         expectedAttendees: "",
         description: "",
         location: "",
+        image: "",
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -57,9 +61,11 @@ const CreateEventModal = ({
             date: "",
             time: "",
             category: "",
+            status: "upcoming",
             expectedAttendees: "",
             description: "",
             location: "",
+            image: "",
         });
         onOpenChange(false);
     };
@@ -121,10 +127,11 @@ const CreateEventModal = ({
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="category">Category</Label>
+                            <Label htmlFor="category">Category *</Label>
                             <Select
                                 value={formData.category}
                                 onValueChange={(value) => handleChange("category", value)}
+                                required
                             >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select Category" />
@@ -135,18 +142,38 @@ const CreateEventModal = ({
                                     <SelectItem value="sports">Sports</SelectItem>
                                     <SelectItem value="career">Career</SelectItem>
                                     <SelectItem value="networking">Networking</SelectItem>
+                                    <SelectItem value="social">Social</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="attendees">Expected Attendees</Label>
-                            <Input
-                                id="attendees"
-                                type="number"
-                                value={formData.expectedAttendees}
-                                onChange={(e) => handleChange("expectedAttendees", e.target.value)}
-                            />
+                            <Label htmlFor="status">Status *</Label>
+                            <Select
+                                value={formData.status}
+                                onValueChange={(value) => handleChange("status", value)}
+                                required
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select Status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="upcoming">Upcoming</SelectItem>
+                                    <SelectItem value="ongoing">Ongoing</SelectItem>
+                                    <SelectItem value="completed">Completed</SelectItem>
+                                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="attendees">Expected Attendees</Label>
+                        <Input
+                            id="attendees"
+                            type="number"
+                            value={formData.expectedAttendees}
+                            onChange={(e) => handleChange("expectedAttendees", e.target.value)}
+                        />
                     </div>
 
                     <div className="space-y-2">
@@ -161,11 +188,24 @@ const CreateEventModal = ({
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="location">Location</Label>
+                        <Label htmlFor="location">Venue *</Label>
                         <Input
                             id="location"
+                            placeholder="e.g., Main Auditorium"
                             value={formData.location}
                             onChange={(e) => handleChange("location", e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="image">Image URL (optional)</Label>
+                        <Input
+                            id="image"
+                            type="url"
+                            placeholder="https://example.com/image.jpg"
+                            value={formData.image}
+                            onChange={(e) => handleChange("image", e.target.value)}
                         />
                     </div>
 
