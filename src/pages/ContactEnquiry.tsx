@@ -10,17 +10,16 @@ import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import { handledownload } from "@/services/downloadenquireis";
 
-
 const ContactEnquiry = () => {
   const [enquiries, setEnquiries] = useState([]);
+  const [filteredEnquiries, setFilteredEnquiries] = useState([]);
   const [status, setStatus] = useState("all");
   const [priority, setPriority] = useState("all");
   const [source, setSource] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
-
-  //fetch all data 
+  //fetch all data
   const fetchdataall = async () => {
     try {
       setLoading(true);
@@ -36,9 +35,6 @@ const ContactEnquiry = () => {
       setLoading(false);
     }
   };
-
-
-
 
   //fetch sepecific data by search
   const fetchdataspecific = async () => {
@@ -62,11 +58,7 @@ const ContactEnquiry = () => {
     }
   };
 
-
-
-
-
-  //search and display feature of all data in the portal 
+  //search and display feature of all data in the portal
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (searchQuery.trim() === "") {
@@ -79,8 +71,14 @@ const ContactEnquiry = () => {
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
 
-
-
+  // Filter enquiries based on status dropdown
+  useEffect(() => {
+    if (status === "all") {
+      setFilteredEnquiries(enquiries);
+    } else {
+      setFilteredEnquiries(enquiries.filter((e) => e.status === status));
+    }
+  }, [status, enquiries]);
 
   //updates status on viewing details
   const handleViewDetails = async (id) => {
@@ -109,16 +107,10 @@ const ContactEnquiry = () => {
     }
   };
 
-
-
-
   const handleReply = (id) => {
     const enquiry = enquiries.find((e) => e._id === id);
     if (!enquiry) return;
   };
-  
-
-
 
   const handleMarkResponded = (id) => {
     setEnquiries(
@@ -131,8 +123,6 @@ const ContactEnquiry = () => {
     });
   };
 
-
-
   const handleClose = (id) => {
     const enquiry = enquiries.find((e) => e._id === id);
     toast({
@@ -141,7 +131,6 @@ const ContactEnquiry = () => {
     });
   };
 
- 
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -162,7 +151,10 @@ const ContactEnquiry = () => {
             <Mail className="w-4 h-4" />
             Send Bulk Email
           </Button>
-          <Button onClick={handledownload} className="bg-blue-600 hover:bg-blue-700 text-white gap-2">
+          <Button
+            onClick={handledownload}
+            className="bg-blue-600 hover:bg-blue-700 text-white gap-2"
+          >
             <Download className="w-4 h-4" />
             Export Data
           </Button>
@@ -199,8 +191,12 @@ const ContactEnquiry = () => {
               <div className="text-center text-muted-foreground text-sm py-10">
                 No enquiries found
               </div>
+            ) : filteredEnquiries.length === 0 ? (
+              <div className="text-center text-muted-foreground text-sm py-10">
+                No enquiries match this filter
+              </div>
             ) : (
-              [...enquiries]
+              [...filteredEnquiries]
                 .reverse()
                 .map((enquiry, index) => (
                   <EnquiryCard
