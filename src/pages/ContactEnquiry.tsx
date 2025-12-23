@@ -27,6 +27,8 @@ import axios from "axios";
 //     }
 // ];
 
+
+
 const ContactEnquiry = () => {
   const [enquiries, setEnquiries] = useState([]);
   const [status, setStatus] = useState("all");
@@ -35,6 +37,8 @@ const ContactEnquiry = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
+
+  //fetch all data 
   const fetchdataall = async () => {
     try {
       setLoading(true);
@@ -50,6 +54,8 @@ const ContactEnquiry = () => {
       setLoading(false);
     }
   };
+
+  //fetch sepecific data by search
   const fetchdataspecific = async () => {
     try {
       setLoading(true);
@@ -71,6 +77,8 @@ const ContactEnquiry = () => {
     }
   };
 
+
+  //search and display feature of all data in the portal 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (searchQuery.trim() === "") {
@@ -83,6 +91,7 @@ const ContactEnquiry = () => {
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
 
+  //updates status on viewing details
   const handleViewDetails = async (id) => {
     try {
       const enquiry = enquiries.find((e) => e._id === id);
@@ -113,6 +122,42 @@ const ContactEnquiry = () => {
     const enquiry = enquiries.find((e) => e._id === id);
     if (!enquiry) return;
   };
+
+
+   // Implement download functionality here
+  const handledownload =async () => {
+    try {
+      const response=await axios.get("http://localhost:5000/api/enquiry/download",{
+        responseType: 'blob', // Important for downloading files, tells browser this is a file not json
+      });
+      // Create a downloadable URL for the blob
+      const url = window.URL.createObjectURL(
+        new Blob([response.data])
+      );
+      const link=document.createElement('a');
+      link.href=url;
+      link.setAttribute('download','mbaenquiries.xlsx'); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      toast({
+        title: "Download Started",
+        description: "Enquiries data is being downloaded.",
+      })
+
+    }
+    catch (error) {
+      console.log("Error downloading data" + error);
+      toast({
+        title: "Error downloading enquiries",
+        description: "Cant download enquiries of students",
+      });
+    }
+   
+  };
+
+
+
 
   const handleMarkResponded = (id) => {
     setEnquiries(
@@ -169,7 +214,7 @@ const ContactEnquiry = () => {
             <Mail className="w-4 h-4" />
             Send Bulk Email
           </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white gap-2">
+          <Button onClick={handledownload} className="bg-blue-600 hover:bg-blue-700 text-white gap-2">
             <Download className="w-4 h-4" />
             Export Data
           </Button>
