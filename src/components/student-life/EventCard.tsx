@@ -5,23 +5,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 export interface Event {
-    id: string;
+    id: number;
     title: string;
     description: string;
     date: string;
     time: string;
     attendees: number;
-    category: "academic" | "cultural" | "sports" | "career" | "networking";
-    status: "upcoming" | "ongoing" | "completed";
+    category: "academic" | "cultural" | "sports" | "career" | "networking" | "social";
+    status: "upcoming" | "ongoing" | "completed" | "cancelled";
     image?: string;
-    location?: string;
+    venue?: string;
 }
 
 interface EventCardProps {
     event: Event;
-    onViewDetails: (id: string) => void;
-    onEdit: (id: string) => void;
-    onDelete: (id: string) => void;
+    onViewDetails: (id: number) => void;
+    onEdit: (id: number) => void;
+    onDelete: (id: number) => void;
 }
 
 const categoryColors: Record<string, string> = {
@@ -30,12 +30,14 @@ const categoryColors: Record<string, string> = {
     sports: "bg-emerald-500/10 text-emerald-700 border-emerald-200",
     career: "bg-orange-500/10 text-orange-700 border-orange-200",
     networking: "bg-pink-500/10 text-pink-700 border-pink-200",
+    social: "bg-red-500/10 text-red-700 border-red-200",
 };
 
 const statusColors: Record<string, string> = {
     upcoming: "bg-emerald-500 text-white",
-    ongoing: "bg-blue-500 text-white",
+    ongoing: "bg-yellow-500 text-white",
     completed: "bg-gray-500 text-white",
+    cancelled: "bg-red-500 text-white",
 };
 
 const EventCard = ({ event, onViewDetails, onEdit, onDelete }: EventCardProps) => {
@@ -81,10 +83,10 @@ const EventCard = ({ event, onViewDetails, onEdit, onDelete }: EventCardProps) =
                         <Clock className="w-4 h-4" />
                         <span>{event.time}</span>
                     </div>
-                    {event.location && (
+                    {event.venue && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <MapPin className="w-4 h-4" />
-                            <span>{event.location}</span>
+                            <span>{event.venue}</span>
                         </div>
                     )}
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
