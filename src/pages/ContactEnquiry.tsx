@@ -107,6 +107,29 @@ const ContactEnquiry = () => {
     }
   };
 
+  const handledelete = async (id) => {
+    try {
+      const response = await axios.delete(
+        "http://localhost:5000/api/enquiry/deletespecific/" + id
+      );
+      // Update state to remove the deleted enquiry
+      setEnquiries((prev) => prev.filter((e) => e._id !== id));
+      setFilteredEnquiries((prev) => prev.filter((e) => e._id !== id));
+      toast({
+        title: "Enquiry Deleted",
+        description: "The enquiry has been deleted successfully.",
+      });
+    } catch (error) {
+      console.log("Error deleting enquiry" + error);
+      toast({
+        title: "Error deleting enquiry",
+        description: "Cant delete the enquiry",
+      });
+    }
+  };
+
+
+
   const handleReply = (id) => {
     const enquiry = enquiries.find((e) => e._id === id);
     if (!enquiry) return;
@@ -203,6 +226,7 @@ const ContactEnquiry = () => {
                     key={index}
                     enquiry={enquiry}
                     onReply={handleReply}
+                    onDelete={handledelete}
                     onViewDetails={handleViewDetails}
                     onMarkResponded={() => handleMarkResponded(enquiry._id)}
                     onClose={() => handleClose(enquiry._id)}

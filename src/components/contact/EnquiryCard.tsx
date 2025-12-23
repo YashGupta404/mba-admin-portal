@@ -30,23 +30,29 @@ const sourceIcons = {
   phone: Phone,
   "social-media": Globe,
 };
-//const EnquiryCard = ({ enquiry, onViewDetails, onReply, onMarkResponded, onClose }) => {
+
 const EnquiryCard = ({
   enquiry,
   onViewDetails,
   onReply,
+  onDelete,
   onMarkResponded,
   onClose,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const SourceIcon = sourceIcons[enquiry.source] || Globe;
   const date = new Date(enquiry.date);
+  
   const handleclick = () => {
     if (!isExpanded && enquiry.status === "new") {
       onViewDetails(enquiry._id); // call only once
     }
     setIsExpanded(!isExpanded);
   };
+
+  const handledeleteclick = () => {
+    onDelete(enquiry._id);
+  }
 
   return (
     <div className="bg-card rounded-lg border border-border p-5 hover:shadow-md transition-shadow">
@@ -149,10 +155,10 @@ const EnquiryCard = ({
         <Button
           variant="link"
           size="sm"
-          className="text-blue-600 hover:text-blue-700"
-          onClick={() => onReply(enquiry._id)}
+          className="text-red-600 hover:text-red-700"
+          onClick={handledeleteclick}
         >
-          Reply
+          Delete
         </Button>
       </div>
     </div>
