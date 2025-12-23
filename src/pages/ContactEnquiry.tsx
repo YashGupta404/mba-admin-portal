@@ -8,25 +8,7 @@ import InstitutionContactForm from "@/components/contact/InstitutionContactForm"
 import EnquiryStatistics from "@/components/contact/EnquiryStatistics";
 import { toast } from "@/hooks/use-toast";
 import axios from "axios";
-
-// Initial enquiries (no TypeScript types)
-// const initialEnquiries = [
-//     {
-//         id: "1",
-//         name: "John Smith",
-//         email: "john.smith@email.com",
-//         phone: "+1 (555) 123-4567",
-//         date: "2024-01-16",
-//         status: "new",
-//         priority: "high",
-//         source: "website",
-//         subject: "MBA Program Admission",
-//         message:
-//             "I am interested in applying for the MBA program. Could you please provide more information about the admission requirements and deadlines?",
-//         received: "2024-01-16",
-//     }
-// ];
-
+import { handledownload } from "@/services/downloadenquireis";
 
 
 const ContactEnquiry = () => {
@@ -55,6 +37,9 @@ const ContactEnquiry = () => {
     }
   };
 
+
+
+
   //fetch sepecific data by search
   const fetchdataspecific = async () => {
     try {
@@ -78,6 +63,9 @@ const ContactEnquiry = () => {
   };
 
 
+
+
+
   //search and display feature of all data in the portal 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -90,6 +78,9 @@ const ContactEnquiry = () => {
 
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
+
+
+
 
   //updates status on viewing details
   const handleViewDetails = async (id) => {
@@ -118,44 +109,14 @@ const ContactEnquiry = () => {
     }
   };
 
+
+
+
   const handleReply = (id) => {
     const enquiry = enquiries.find((e) => e._id === id);
     if (!enquiry) return;
   };
-
-
-   // Implement download functionality here
-  const handledownload =async () => {
-    try {
-      const response=await axios.get("http://localhost:5000/api/enquiry/download",{
-        responseType: 'blob', // Important for downloading files, tells browser this is a file not json
-      });
-      // Create a downloadable URL for the blob
-      const url = window.URL.createObjectURL(
-        new Blob([response.data])
-      );
-      const link=document.createElement('a');
-      link.href=url;
-      link.setAttribute('download','mbaenquiries.xlsx'); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      toast({
-        title: "Download Started",
-        description: "Enquiries data is being downloaded.",
-      })
-
-    }
-    catch (error) {
-      console.log("Error downloading data" + error);
-      toast({
-        title: "Error downloading enquiries",
-        description: "Cant download enquiries of students",
-      });
-    }
-   
-  };
-
+  
 
 
 
@@ -170,6 +131,8 @@ const ContactEnquiry = () => {
     });
   };
 
+
+
   const handleClose = (id) => {
     const enquiry = enquiries.find((e) => e._id === id);
     toast({
@@ -178,22 +141,7 @@ const ContactEnquiry = () => {
     });
   };
 
-  //   const filteredEnquiries = enquiries.filter((enquiry) => {
-  //     if (status !== "all" && enquiry.status !== status) return false;
-  //     if (priority !== "all" && enquiry.priority !== priority) return false;
-  //     if (source !== "all" && enquiry.source !== source) return false;
-  //     if (searchQuery) {
-  //       const query = searchQuery.toLowerCase();
-  //       return (
-  //         enquiry.name.toLowerCase().includes(query) ||
-  //         enquiry.email.toLowerCase().includes(query) ||
-  //         enquiry.subject.toLowerCase().includes(query) ||
-  //         enquiry.message.toLowerCase().includes(query)
-  //       );
-  //     }
-  //     return true;
-  //   });
-
+ 
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
