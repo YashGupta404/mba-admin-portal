@@ -14,7 +14,7 @@ const ContactEnquiry = () => {
   const [enquiries, setEnquiries] = useState([]);
   const [filteredEnquiries, setFilteredEnquiries] = useState([]);
   const [status, setStatus] = useState("all");
-  const [priority, setPriority] = useState("all");
+  const [sort, setsort] = useState("all");
   const [source, setSource] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -224,11 +224,11 @@ const ContactEnquiry = () => {
           {/* Filters */}
           <EnquiryFilters
             status={status}
-            priority={priority}
+            sort={sort}
             source={source}
             searchQuery={searchQuery}
             onStatusChange={setStatus}
-            onPriorityChange={setPriority}
+            onsortChange={setsort}
             onSourceChange={setSource}
             onSearchChange={setSearchQuery}
           />

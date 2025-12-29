@@ -12,14 +12,14 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { set } from "date-fns";
 
-//Status and priority color mappings
+//Status and sort color mappings
 const statusColors = {
   new: "bg-blue-500/10 text-blue-700 border-blue-200",
   "in-progress": "bg-yellow-500/10 text-yellow-700 border-yellow-200",
   responded: "bg-emerald-500/10 text-emerald-700 border-emerald-200",
 };
 
-const priorityColors = {
+const sortColors = {
   high: "bg-red-500/10 text-red-700 border-red-200",
   medium: "bg-orange-500/10 text-orange-700 border-orange-200",
   low: "bg-gray-500/10 text-gray-700 border-gray-200",
@@ -79,11 +79,6 @@ const EnquiryCard = ({ enquiry, onViewDetails, onReply, onDelete }) => {
             >
               {enquiry.status}
             </Badge>
-            <Badge
-              className={cn("border text-xs", priorityColors[enquiry.priority])}
-            >
-              {enquiry.priority}
-            </Badge>
             <SourceIcon className="w-4 h-4 text-muted-foreground" />
           </div>
 
@@ -124,7 +119,7 @@ const EnquiryCard = ({ enquiry, onViewDetails, onReply, onDelete }) => {
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 <span>Received: {enquiry.received}</span>
                 <span>Source: {enquiry.source}</span>
-                <span>Priority: {enquiry.priority}</span>
+                <span>sort: {enquiry.sort}</span>
               </div>
               {!isreplied ? (
                 <form onSubmit={handlereplysubmit} className="flex gap-2 mt-4">

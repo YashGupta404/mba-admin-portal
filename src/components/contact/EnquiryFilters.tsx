@@ -12,11 +12,11 @@ import { toast } from "@/hooks/use-toast";
 
 const EnquiryFilters = ({
   status,
-  priority,
+  sort,
   source,
   searchQuery,
   onStatusChange,
-  onPriorityChange,
+  onsortChange,
   onSourceChange,
   onSearchChange,
 
@@ -38,16 +38,15 @@ const EnquiryFilters = ({
         </SelectContent>
       </Select>
 
-      {/* Priority Filter */}
-      <Select value={priority} onValueChange={onPriorityChange}>
+      {/* sort Filter */}
+      <Select value={sort} onValueChange={onsortChange}>
         <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="All Priority" />
+          <SelectValue placeholder="All sort" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Priority</SelectItem>
-          <SelectItem value="high">High</SelectItem>
-          <SelectItem value="medium">Medium</SelectItem>
-          <SelectItem value="low">Low</SelectItem>
+          <SelectItem value="all">All sort</SelectItem>
+          <SelectItem value="datenewest">By Date : Newest</SelectItem>
+          <SelectItem value="dateoldest">By Date : Oldest</SelectItem>
         </SelectContent>
       </Select>
 
