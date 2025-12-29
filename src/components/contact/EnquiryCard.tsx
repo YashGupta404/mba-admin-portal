@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Mail,
   Phone,
@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { set } from "date-fns";
 
 //Status and priority color mappings
 const statusColors = {
@@ -31,16 +32,12 @@ const sourceIcons = {
   "social-media": Globe,
 };
 
-const EnquiryCard = ({
-  enquiry,
-  onViewDetails,
-  onReply,
-  onDelete,
-}) => {
+const EnquiryCard = ({ enquiry, onViewDetails, onReply, onDelete }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isreplied, setIsreplied] = useState(false);
   const SourceIcon = sourceIcons[enquiry.source] || Globe;
   const date = new Date(enquiry.date);
-  
+
   const handleclick = () => {
     if (!isExpanded && enquiry.status === "new") {
       onViewDetails(enquiry._id); // call only once
@@ -50,8 +47,7 @@ const EnquiryCard = ({
 
   const handledeleteclick = () => {
     onDelete(enquiry._id);
-  }
-
+  };
 
   const [replyMessage, setReplyMessage] = useState("");
 
@@ -64,7 +60,12 @@ const EnquiryCard = ({
     e.preventDefault();
     onReply(enquiry._id, replyMessage);
     setReplyMessage("");
+    
   };
+  useEffect(() => {
+    if (enquiry.status === "responded") {
+      setIsreplied(true);     
+    }}, [enquiry.reply]);
 
   return (
     <div className="bg-card rounded-lg border border-border p-5 hover:shadow-md transition-shadow">
@@ -124,18 +125,29 @@ const EnquiryCard = ({
                 <span>Source: {enquiry.source}</span>
                 <span>Priority: {enquiry.priority}</span>
               </div>
-              <form onSubmit={handlereplysubmit} className="flex gap-2 mt-4">
-                <input name="reply" value={replyMessage} onChange={handleReplyChange}  placeholder="Type your reply here..." className="flex-1 border border-input bg-background px-3 py-2 rounded-md text-sm outline-none focus:border-emerald-500 " />
-                <Button
-                  type="submit"
-                  size="sm"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                  
-                >
-                  Reply
-                </Button>
-                
-              </form>
+              {!isreplied ? (
+                <form onSubmit={handlereplysubmit} className="flex gap-2 mt-4">
+                  <input
+                    name="reply"
+                    value={replyMessage}
+                    onChange={handleReplyChange}
+                    placeholder="Type your reply here..."
+                    className="flex-1 border border-input bg-background px-3 py-2 rounded-md text-sm outline-none focus:border-emerald-500 "
+                  />
+                  <Button
+                    type="submit"
+                    size="sm"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                  >
+                    Reply
+                  </Button>
+                </form>
+              ) : (<div>
+                <h6 className="font-semibold text-sm my-3">Reply:</h6>
+                <p className="text-sm text-muted-foreground mb-3">
+                {enquiry.reply}
+              </p></div>
+              )}
             </div>
           )}
         </div>
