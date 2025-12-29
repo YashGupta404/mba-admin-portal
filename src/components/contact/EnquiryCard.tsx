@@ -56,16 +56,17 @@ const EnquiryCard = ({ enquiry, onViewDetails, onReply, onDelete }) => {
     setReplyMessage(e.target.value);
   };
 
-  const handlereplysubmit = (e) => {
+  const handlereplysubmit =  (e) => {
     e.preventDefault();
     onReply(enquiry._id, replyMessage);
+    setIsreplied(true);
     setReplyMessage("");
-    
   };
   useEffect(() => {
     if (enquiry.status === "responded") {
-      setIsreplied(true);     
-    }}, [enquiry.reply]);
+      setIsreplied(true);
+    }
+  }, []);
 
   return (
     <div className="bg-card rounded-lg border border-border p-5 hover:shadow-md transition-shadow">
@@ -142,11 +143,21 @@ const EnquiryCard = ({ enquiry, onViewDetails, onReply, onDelete }) => {
                     Reply
                   </Button>
                 </form>
-              ) : (<div>
-                <h6 className="font-semibold text-sm my-3">Reply:</h6>
-                <p className="text-sm text-muted-foreground mb-3">
-                {enquiry.reply}
-              </p></div>
+              ) : (
+                <div>
+                  <h6 className="font-semibold text-sm my-3 ">Reply:</h6>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    {enquiry.reply}
+                  </p>
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <span>
+                      Date:{" "}
+                      {enquiry.replyDate
+                        ? new Date(enquiry.replyDate).toLocaleDateString()
+                        : "Not replied yet"}
+                    </span>
+                  </div>
+                </div>
               )}
             </div>
           )}

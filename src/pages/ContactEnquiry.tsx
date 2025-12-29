@@ -128,39 +128,45 @@ const ContactEnquiry = () => {
     }
   };
 
-
   //handle reply to enquiry
-  const handleReply =async (id, replyMessage) => {
+  const handleReply = async (id, replyMessage) => {
     const enquiry = enquiries.find((e) => e._id === id);
     if (!enquiry) return;
 
-   try{
-    const response = await axios.post(
-      `http://localhost:5000/api/enquiry/reply/${id}`,
-      {
-        reply: replyMessage,
-      }
-    );
-     toast({
-      title: "Reply Sent",
-      description: `Reply has been sent to ${enquiry.name}.`,
-    });
-    if(enquiry.status === "responded") return;
-    
-    const response2 = await axios.put(
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/enquiry/reply/${id}`,
+        {
+          reply: replyMessage,
+        }
+      );
+      toast({
+        title: "Reply Sent",
+        description: `Reply has been sent to ${enquiry.name}.`,
+      });
+      if (enquiry.status === "responded") return;
+
+      const response2 = await axios.put(
         `http://localhost:5000/api/enquiry/status/${id}`,
         {
           status: "responded",
         }
       );
-      
+
       // Update status in UI (React state)
       setEnquiries((prev) =>
-        prev.map((e) => (e._id === id ? { ...e, status: "responded" } : e))
+        prev.map((e) =>
+          e._id === id
+            ? {
+                ...e,
+                reply: replyMessage,
+                replyDate: new Date(),
+                status: "responded",
+              }
+            : e
+        )
       );
-    
-   }
-    catch(error){
+    } catch (error) {
       console.log("Error replying to enquiry" + error);
       toast({
         title: "Error replying to enquiry",
@@ -168,10 +174,6 @@ const ContactEnquiry = () => {
       });
     }
   };
-
-
-
-
 
   const handleClose = (id) => {
     const enquiry = enquiries.find((e) => e._id === id);
@@ -255,8 +257,6 @@ const ContactEnquiry = () => {
                     onReply={handleReply}
                     onDelete={handledelete}
                     onViewDetails={handleViewDetails}
-                    
-                   
                   />
                 ))
             )}
