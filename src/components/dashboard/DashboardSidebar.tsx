@@ -44,39 +44,39 @@ const DashboardSidebar = ({ collapsed, onToggle }: DashboardSidebarProps) => {
         collapsed ? "w-16" : "w-64"
       )}
     >
-{/* Header */}
-<div className="p-4 flex items-center gap-3 border-b border-sidebar-border">
-  {/* Logo */}
-  <img
-    src="/src/assets/mba_logo.png"
-    alt="MBA Logo"
-    className="h-8 w-8 object-contain"
-  />
+      {/* Header */}
+      <div className="p-4 flex items-center gap-3 border-b border-sidebar-border">
+        {/* Logo */}
+        <img
+          src="/src/assets/mba_logo.png"
+          alt="MBA Logo"
+          className="h-8 w-8 object-contain"
+        />
 
-  {/* Brand text */}
-  {!collapsed && (
-    <div className="animate-fade-in leading-tight">
-      <h2 className="text-sidebar-foreground font-semibold text-sm">
-        Institute of Engineering & Management
-      </h2>
-      <p className="text-sidebar-muted text-xs">Admin Panel</p>
-    </div>
-  )}
+        {/* Brand text */}
+        {!collapsed && (
+          <div className="animate-fade-in leading-tight">
+            <h2 className="text-sidebar-foreground font-semibold text-sm">
+              Institute of Engineering & Management
+            </h2>
+            <p className="text-sidebar-muted text-xs">Admin Panel</p>
+          </div>
+        )}
 
-  {/* Collapse toggle */}
-  <Button
-    variant="ghost"
-    size="icon"
-    onClick={onToggle}
-    className="ml-auto text-sidebar-foreground hover:bg-sidebar-accent h-8 w-8"
-  >
-    {collapsed ? (
-      <ChevronRight className="w-4 h-4" />
-    ) : (
-      <ChevronLeft className="w-4 h-4" />
-    )}
-  </Button>
-</div>
+        {/* Collapse toggle */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggle}
+          className="ml-auto text-sidebar-foreground hover:bg-sidebar-accent h-8 w-8"
+        >
+          {collapsed ? (
+            <ChevronRight className="w-4 h-4" />
+          ) : (
+            <ChevronLeft className="w-4 h-4" />
+          )}
+        </Button>
+      </div>
 
 
       {/* Navigation */}
