@@ -3,15 +3,17 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export interface Programme {
-    id: string;
-    name: string;
-    description: string;
-    duration: string;
-    students: number;
-    courses: number;
-    color: string;
-    iconBg: string;
+  id: string;
+  name: string;
+  description: string;
+  overviewText?: string; // ✅ ADD
+  duration: string;
+  students: number;
+  courses: number;
+  color: string;
+  iconBg: string;
 }
+
 
 interface ProgrammeCardProps {
     programme: Programme;
