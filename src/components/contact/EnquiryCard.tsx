@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import {
   Mail,
   Phone,
@@ -36,8 +36,6 @@ const EnquiryCard = ({
   onViewDetails,
   onReply,
   onDelete,
-  onMarkResponded,
-  onClose,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const SourceIcon = sourceIcons[enquiry.source] || Globe;
@@ -53,6 +51,20 @@ const EnquiryCard = ({
   const handledeleteclick = () => {
     onDelete(enquiry._id);
   }
+
+
+  const [replyMessage, setReplyMessage] = useState("");
+
+  const handleReplyChange = (e) => {
+    console.log(e.target.value);
+    setReplyMessage(e.target.value);
+  };
+
+  const handlereplysubmit = (e) => {
+    e.preventDefault();
+    onReply(enquiry._id, replyMessage);
+    setReplyMessage("");
+  };
 
   return (
     <div className="bg-card rounded-lg border border-border p-5 hover:shadow-md transition-shadow">
@@ -112,22 +124,18 @@ const EnquiryCard = ({
                 <span>Source: {enquiry.source}</span>
                 <span>Priority: {enquiry.priority}</span>
               </div>
-              <div className="flex gap-2 mt-4">
+              <form onSubmit={handlereplysubmit} className="flex gap-2 mt-4">
+                <input name="reply" value={replyMessage} onChange={handleReplyChange}  placeholder="Type your reply here..." className="flex-1 border border-input bg-background px-3 py-2 rounded-md text-sm outline-none focus:border-emerald-500 " />
                 <Button
+                  type="submit"
                   size="sm"
                   className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                  onClick={() => onMarkResponded(enquiry.id)}
+                  
                 >
-                  Mark as Responded
+                  Reply
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => onClose(enquiry.id)}
-                >
-                  Close Enquiry
-                </Button>
-              </div>
+                
+              </form>
             </div>
           )}
         </div>

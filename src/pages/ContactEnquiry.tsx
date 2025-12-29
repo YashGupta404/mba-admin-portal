@@ -129,22 +129,49 @@ const ContactEnquiry = () => {
   };
 
 
-
-  const handleReply = (id) => {
+  //handle reply to enquiry
+  const handleReply =async (id, replyMessage) => {
     const enquiry = enquiries.find((e) => e._id === id);
     if (!enquiry) return;
+
+   try{
+    const response = await axios.post(
+      `http://localhost:5000/api/enquiry/reply/${id}`,
+      {
+        reply: replyMessage,
+      }
+    );
+     toast({
+      title: "Reply Sent",
+      description: `Reply has been sent to ${enquiry.name}.`,
+    });
+    if(enquiry.status === "responded") return;
+    
+    const response2 = await axios.put(
+        `http://localhost:5000/api/enquiry/status/${id}`,
+        {
+          status: "responded",
+        }
+      );
+      
+      // Update status in UI (React state)
+      setEnquiries((prev) =>
+        prev.map((e) => (e._id === id ? { ...e, status: "responded" } : e))
+      );
+    
+   }
+    catch(error){
+      console.log("Error replying to enquiry" + error);
+      toast({
+        title: "Error replying to enquiry",
+        description: "Cant reply to the enquiry",
+      });
+    }
   };
 
-  const handleMarkResponded = (id) => {
-    setEnquiries(
-      enquiries.map((e) => (e._id === id ? { ...e, status: "responded" } : e))
-    );
-    const enquiry = enquiries.find((e) => e._id === id);
-    toast({
-      title: "Marked as Responded",
-      description: `Enquiry of ${enquiry.name} has been marked as responded.`,
-    });
-  };
+
+
+
 
   const handleClose = (id) => {
     const enquiry = enquiries.find((e) => e._id === id);
@@ -228,8 +255,8 @@ const ContactEnquiry = () => {
                     onReply={handleReply}
                     onDelete={handledelete}
                     onViewDetails={handleViewDetails}
-                    onMarkResponded={() => handleMarkResponded(enquiry._id)}
-                    onClose={() => handleClose(enquiry._id)}
+                    
+                   
                   />
                 ))
             )}
