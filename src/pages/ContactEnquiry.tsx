@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Mail, Download } from "lucide-react";
+import { Mail, Download, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EnquiryCard from "@/components/contact/EnquiryCard";
@@ -7,10 +7,13 @@ import EnquiryFilters from "@/components/contact/EnquiryFilters";
 import InstitutionContactForm from "@/components/contact/InstitutionContactForm";
 import EnquiryStatistics from "@/components/contact/EnquiryStatistics";
 import { toast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import axios from "axios";
 import { handledownload } from "@/services/downloadenquireis";
+import { set } from "date-fns";
 
 const ContactEnquiry = () => {
+  const isMobile = useIsMobile();
   const [enquiries, setEnquiries] = useState([]);
   const [filteredEnquiries, setFilteredEnquiries] = useState([]);
   const [status, setStatus] = useState("all");
@@ -18,6 +21,7 @@ const ContactEnquiry = () => {
   const [source, setSource] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(!isMobile);
 
   //fetch all data
   const fetchdataall = async () => {
@@ -36,14 +40,16 @@ const ContactEnquiry = () => {
     }
   };
 
-  //fetch sepecific data by search
+  //fetch specific data by search
   const fetchdataspecific = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
         "http://localhost:5000/api/enquiry/search",
         {
-          params: { search: searchQuery },
+          params: {
+            search: searchQuery,
+          },
         }
       );
       setEnquiries(response.data.display);
@@ -73,12 +79,25 @@ const ContactEnquiry = () => {
 
   // Filter enquiries based on status dropdown
   useEffect(() => {
-    if (status === "all") {
-      setFilteredEnquiries(enquiries);
-    } else {
-      setFilteredEnquiries(enquiries.filter((e) => e.status === status));
-    }
-  }, [status, enquiries]);
+  let result = [...enquiries];
+
+  // 1️⃣ Filter by status
+  if (status !== "all") {
+    result = result.filter((e) => e.status === status);
+  }
+
+  // 2️⃣ Sort by date
+  if (sort === "datenewest") {
+    result.sort((a, b) => new Date(a.date) - new Date(b.date));
+  } else if (sort === "datenewest") {
+    result.sort((a, b) => new Date(b.date) - new Date(a.date));
+  }
+
+  // 3️⃣ Update once
+  setFilteredEnquiries(result);
+
+}, [status, enquiries, sort]);
+
 
   //updates status on viewing details
   const handleViewDetails = async (id) => {
@@ -184,67 +203,95 @@ const ContactEnquiry = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">
+          <h1 className="text-xl md:text-2xl font-semibold text-foreground">
             Contact & Enquiry Management
           </h1>
-          <p className="text-muted-foreground text-sm mt-1">
+          <p className="text-muted-foreground text-xs md:text-sm mt-1">
             Manage student enquiries and contact information
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
           <Button
             variant="outline"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600 gap-2"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600 gap-2 text-sm md:text-base"
           >
             <Mail className="w-4 h-4" />
-            Send Bulk Email
+            <span className="hidden sm:inline">Send Bulk Email</span>
+            <span className="sm:hidden">Email</span>
           </Button>
           <Button
             onClick={handledownload}
-            className="bg-blue-600 hover:bg-blue-700 text-white gap-2"
+            className="bg-blue-600 hover:bg-blue-700 text-white gap-2 text-sm md:text-base"
           >
             <Download className="w-4 h-4" />
-            Export Data
+            <span className="hidden sm:inline">Export Data</span>
+            <span className="sm:hidden">Export</span>
           </Button>
         </div>
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="enquiries" className="space-y-6">
-        <TabsList>
+      <Tabs defaultValue="enquiries" className="space-y-4 md:space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="enquiries">Enquiries</TabsTrigger>
-          <TabsTrigger value="contact">Contact Information</TabsTrigger>
+          <TabsTrigger value="contact">Contact Info</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="enquiries" className="space-y-6">
+        <TabsContent value="enquiries" className="space-y-4 md:space-y-6">
+          {/* Filter Toggle Button for Mobile */}
+          {isMobile && (
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex-1 gap-2"
+              >
+                {showFilters ? (
+                  <>
+                    <X className="w-4 h-4" />
+                    Hide Filters
+                  </>
+                ) : (
+                  <>
+                    <Filter className="w-4 h-4" />
+                    Show Filters
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+
           {/* Filters */}
-          <EnquiryFilters
-            status={status}
-            sort={sort}
-            source={source}
-            searchQuery={searchQuery}
-            onStatusChange={setStatus}
-            onsortChange={setsort}
-            onSourceChange={setSource}
-            onSearchChange={setSearchQuery}
-          />
+          {showFilters && (
+            <EnquiryFilters
+              status={status}
+              sort={sort}
+              source={source}
+              searchQuery={searchQuery}
+              onStatusChange={setStatus}
+              onsortChange={setsort}
+              onSourceChange={setSource}
+              onSearchChange={setSearchQuery}
+            />
+          )}
 
           {/* Enquiries List */}
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4">
             {loading ? (
-              <div className="text-center text-muted-foreground text-sm py-10">
+              <div className="text-center text-muted-foreground text-sm py-8 md:py-10">
                 Loading enquiries...
               </div>
             ) : enquiries.length === 0 ? (
-              <div className="text-center text-muted-foreground text-sm py-10">
+              <div className="text-center text-muted-foreground text-sm py-8 md:py-10">
                 No enquiries found
               </div>
             ) : filteredEnquiries.length === 0 ? (
-              <div className="text-center text-muted-foreground text-sm py-10">
+              <div className="text-center text-muted-foreground text-sm py-8 md:py-10">
                 No enquiries match this filter
               </div>
             ) : (
@@ -263,8 +310,8 @@ const ContactEnquiry = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="contact" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <TabsContent value="contact" className="space-y-4 md:space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
             <div className="lg:col-span-2">
               <InstitutionContactForm
                 onSave={(data) => {
@@ -276,7 +323,7 @@ const ContactEnquiry = () => {
                 }}
               />
             </div>
-            <div>
+            <div className="overflow-auto">
               <EnquiryStatistics />
             </div>
           </div>

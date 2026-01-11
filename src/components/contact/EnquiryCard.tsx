@@ -69,82 +69,84 @@ const EnquiryCard = ({ enquiry, onViewDetails, onReply, onDelete }) => {
   }, []);
 
   return (
-    <div className="bg-card rounded-lg border border-border p-5 hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <h4 className="font-semibold text-foreground">{enquiry.name}</h4>
+    <div className="bg-card rounded-lg border border-border p-3 md:p-5 hover:shadow-md transition-shadow">
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-0 mb-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <h4 className="font-semibold text-sm md:text-base text-foreground truncate">
+              {enquiry.name}
+            </h4>
             <Badge
               className={cn("border text-xs", statusColors[enquiry.status])}
             >
               {enquiry.status}
             </Badge>
-            <SourceIcon className="w-4 h-4 text-muted-foreground" />
+            <SourceIcon className="w-3 h-3 md:w-4 md:h-4 text-muted-foreground flex-shrink-0" />
           </div>
 
-          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-            <div className="flex items-center gap-1">
-              <Mail className="w-4 h-4" />
-              <a href={`mailto:${enquiry.email}`} className="underline">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 text-xs md:text-sm text-muted-foreground mb-3">
+            <div className="flex items-center gap-1 min-w-0">
+              <Mail className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
+              <a href={`mailto:${enquiry.email}`} className="underline truncate">
                 {enquiry.email}
               </a>
             </div>
-            <div className="flex items-center gap-1">
-              <Phone className="w-4 h-4" />
+            <div className="flex items-center gap-1 min-w-0">
+              <Phone className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
               <a href={`tel:+91${enquiry.mobile}`} className="underline">
                 {enquiry.mobile}
               </a>
             </div>
-            <div className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <Calendar className="w-3 h-3 md:w-4 md:h-4" />
               <span>{date.toLocaleDateString()}</span>
             </div>
           </div>
 
           <div className="mb-3">
-            <h5 className="font-medium text-foreground text-sm mb-1">
+            <h5 className="font-medium text-foreground text-xs md:text-sm mb-1 line-clamp-1">
               {enquiry.subject}
             </h5>
-            <p className="text-sm text-muted-foreground line-clamp-2">
+            <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">
               {enquiry.message}
             </p>
           </div>
 
           {isExpanded && (
-            <div className="mt-4 p-4 bg-muted/30 rounded-lg border border-border">
-              <h6 className="font-semibold text-sm mb-2">Full Message:</h6>
-              <p className="text-sm text-muted-foreground mb-3">
+            <div className="mt-4 p-3 md:p-4 bg-muted/30 rounded-lg border border-border">
+              <h6 className="font-semibold text-xs md:text-sm mb-2">Full Message:</h6>
+              <p className="text-xs md:text-sm text-muted-foreground mb-3">
                 {enquiry.message}
               </p>
-              <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                <span>Received: {enquiry.received}</span>
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 text-xs text-muted-foreground mb-4">
+                <span className="break-words">Received: {enquiry.received}</span>
                 <span>Source: {enquiry.source}</span>
-                <span>sort: {enquiry.sort}</span>
+                <span>Sort: {enquiry.sort}</span>
               </div>
               {!isreplied ? (
-                <form onSubmit={handlereplysubmit} className="flex gap-2 mt-4">
+                <form onSubmit={handlereplysubmit} className="flex flex-col sm:flex-row gap-2">
                   <input
                     name="reply"
                     value={replyMessage}
                     onChange={handleReplyChange}
                     placeholder="Type your reply here..."
-                    className="flex-1 border border-input bg-background px-3 py-2 rounded-md text-sm outline-none focus:border-emerald-500 "
+                    className="flex-1 border border-input bg-background px-3 py-2 rounded-md text-xs md:text-sm outline-none focus:border-emerald-500"
                   />
                   <Button
                     type="submit"
                     size="sm"
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
                   >
                     Reply
                   </Button>
                 </form>
               ) : (
                 <div>
-                  <h6 className="font-semibold text-sm my-3 ">Reply:</h6>
-                  <p className="text-sm text-muted-foreground mb-3">
+                  <h6 className="font-semibold text-xs md:text-sm my-2">Reply:</h6>
+                  <p className="text-xs md:text-sm text-muted-foreground mb-3 break-words">
                     {enquiry.reply}
                   </p>
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span>
                       Date:{" "}
                       {enquiry.replyDate
@@ -159,29 +161,29 @@ const EnquiryCard = ({ enquiry, onViewDetails, onReply, onDelete }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
         <Button
           variant="link"
           size="sm"
-          className="text-emerald-600 hover:text-emerald-700 px-0"
+          className="text-emerald-600 hover:text-emerald-700 px-0 text-xs md:text-sm w-full sm:w-auto justify-start sm:justify-start"
           onClick={handleclick}
         >
           {isExpanded ? (
             <>
               Hide Details
-              <ChevronUp className="w-4 h-4 ml-1" />
+              <ChevronUp className="w-3 h-3 md:w-4 md:h-4 ml-1" />
             </>
           ) : (
             <>
               View Details
-              <ChevronDown className="w-4 h-4 ml-1" />
+              <ChevronDown className="w-3 h-3 md:w-4 md:h-4 ml-1" />
             </>
           )}
         </Button>
         <Button
           variant="link"
           size="sm"
-          className="text-red-600 hover:text-red-700"
+          className="text-red-600 hover:text-red-700 text-xs md:text-sm px-0 w-full sm:w-auto justify-start sm:justify-start"
           onClick={handledeleteclick}
         >
           Delete
