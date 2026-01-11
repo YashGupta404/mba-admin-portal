@@ -1,152 +1,209 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
+import { toast } from "@/hooks/use-toast";
 
-interface ContactFormData {
-    address: string;
-    phone: string;
-    email: string;
-    website: string;
-    officeHours: string;
-    facebook: string;
-    twitter: string;
-    linkedin: string;
-    instagram: string;
-}
+const InstitutionContactForm = () => {
+  const [formdata, setformData] = useState({
+    address: "123 Education Street, Academic City, AC 12345",
+    phone: "+1 (555) 123-4567",
+    email: "admissions@mba-institute.edu",
+    officeHours: "Monday - Friday: 9:00 AM - 6:00 PM",
+    facebookLink: "https://facebook.com/mba-institute",
+    twitterLink: "https://twitter.com/mba-institute",
+    linkedinLink: "https://linkedin.com/school/mba-institute",
+    instagramLink: "https://instagram.com/mba-institute",
+  });
 
-interface InstitutionContactFormProps {
-    onSave: (data: ContactFormData) => void;
-}
+  const handlechange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    const shallowcopy = { ...formdata };
+    shallowcopy[name] = value;
+    setformData(shallowcopy);
+  };
 
-const InstitutionContactForm = ({ onSave }: InstitutionContactFormProps) => {
-    const [formData, setFormData] = useState<ContactFormData>({
-        address: "123 Education Street, Academic City, AC 12345",
-        phone: "+1 (555) 123-4567",
-        email: "admissions@mba-institute.edu",
-        website: "https://mba-institute.edu",
-        officeHours: "Monday - Friday: 9:00 AM - 6:00 PM",
-        facebook: "https://facebook.com/mba-institute",
-        twitter: "https://twitter.com/mba-institute",
-        linkedin: "https://linkedin.com/school/mba-institute",
-        instagram: "https://instagram.com/mba-institute",
-    });
+  const handlesubmit =async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const {
+      address,
+      phone,
+      email,
+      officeHours,
+      facebookLink,
+      twitterLink,
+      linkedinLink,
+      instagramLink,
+    } = formdata;
+    if (
+      !address ||
+      !phone ||
+      !email ||
+      !officeHours ||
+      !facebookLink ||
+      !twitterLink ||
+      !linkedinLink ||
+      !instagramLink
+    ) {
+      console.log("Kindly fill up the credentials");
+    }
+    try {
+      const response = await axios.put(
+        "http://localhost:5000/api/collegeinfo",
+        formdata
+      );
+      const { success, error, message } = response.data;
+      if (success) {
+        console.log("College Information updated successfully");
+        toast({
+          title: "Success",
+          description: "College Information updated successfully",
+        });
+      }
+      if (error) {
+        console.log("Error occured while posting data=", error);
+        toast({
+            title: "Error",
+            description: "Error occured while updating college information",}); 
+      }
+    } catch (err) {
+      console.log("Error with college info form api...", err);
+        toast({
+            title: "Error",
+            description: "Error occured while updating college information",});
+    }
+  };
 
-    const handleChange = (field: keyof ContactFormData, value: string) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-    };
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
+      {/* Header */}
+      <div className="mb-3">
+        <h3 className="text-lg font-semibold">
+          Institution Contact Information
+        </h3>
+      </div>
 
-    const handleSave = () => {
-        onSave(formData);
-    };
+      <form onSubmit={handlesubmit} className="space-y-4">
+        {/* Address */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Address</label>
+          <textarea
+            name="address"
+            className="w-full h-20 rounded-md border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+            value={formdata.address}
+            placeholder="Address"
+            onChange={handlechange}
+          />
+        </div>
 
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="text-lg">Institution Contact Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="space-y-2">
-                    <Label htmlFor="address">Address</Label>
-                    <Textarea
-                        id="address"
-                        value={formData.address}
-                        onChange={(e) => handleChange("address", e.target.value)}
-                        rows={3}
-                        className="resize-none"
-                    />
-                </div>
+        {/* Phone & Email */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Phone</label>
+            <input
+              type="text"
+              name="phone"
+              className="w-full h-10 rounded-md border border-gray-300 px-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              value={formdata.phone}
+              placeholder="Phone"
+              onChange={handlechange}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Email</label>
+            <input
+              name="email"
+              type="email"
+              className="w-full h-10 rounded-md border border-gray-300 px-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+              value={formdata.email}
+              placeholder="Email"
+              onChange={handlechange}
+            />
+          </div>
+        </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="phone">Phone</Label>
-                        <Input
-                            id="phone"
-                            value={formData.phone}
-                            onChange={(e) => handleChange("phone", e.target.value)}
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) => handleChange("email", e.target.value)}
-                        />
-                    </div>
-                </div>
+        {/* Website */}
+        {/* <div className="space-y-2">
+          <label className="text-sm font-medium">Website</label>
+          <input
+            type="text"
+            className="w-full h-10 rounded-md border border-gray-300 px-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+            value={formdata.website}
+            placeholder="Website"
+            onChange={(e) => handleChange("website", e.target.value)}
+          />
+        </div> */}
 
-                <div className="space-y-2">
-                    <Label htmlFor="website">Website</Label>
-                    <Input
-                        id="website"
-                        value={formData.website}
-                        onChange={(e) => handleChange("website", e.target.value)}
-                    />
-                </div>
+        {/* Office Hours */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Office Hours</label>
+          <input
+            type="text"
+            name="officeHours"
+            className="w-full h-10 rounded-md border border-gray-300 px-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+            value={formdata.officeHours}
+            placeholder="Office Hours"
+            onChange={handlechange}
+          />
+        </div>
 
-                <div className="space-y-2">
-                    <Label htmlFor="officeHours">Office Hours</Label>
-                    <Input
-                        id="officeHours"
-                        value={formData.officeHours}
-                        onChange={(e) => handleChange("officeHours", e.target.value)}
-                    />
-                </div>
+        {/* Social Media Links */}
+        <div className="pt-4 border-t border-gray-200">
+          <h4 className="font-semibold text-sm mb-3">Social Media Links</h4>
+          <div className="space-y-3">
+            {[
+              {
+                icon: <Facebook className="w-5 h-5 text-blue-600" />,
+                key: "facebookLink",
+                placeholder: "Facebook URL",
+              },
+              {
+                icon: <Twitter className="w-5 h-5 text-sky-500" />,
+                key: "twitterLink",
+                placeholder: "Twitter URL",
+              },
+              {
+                icon: <Linkedin className="w-5 h-5 text-blue-700" />,
+                key: "linkedin",
+                placeholder: "LinkedIn URL",
+              },
+              {
+                icon: <Instagram className="w-5 h-5 text-pink-600" />,
+                key: "instagramLink",
+                placeholder: "Instagram URL",
+              },
+            ].map(({ icon, key, placeholder }) => (
+              <div className="flex items-center gap-3" key={key}>
+                {icon}
+                <input
+                  type="text"
+                  name={key}
+                  value={formdata[key]}
+                  placeholder={placeholder}
+                  className="flex-1 h-10 rounded-md border border-gray-300 px-3 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  onChange={handlechange}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
 
-                <div className="pt-4 border-t border-border">
-                    <h4 className="font-semibold text-sm mb-3">Social Media Links</h4>
-                    <div className="space-y-3">
-                        <div className="flex items-center gap-3">
-                            <Facebook className="w-5 h-5 text-blue-600" />
-                            <Input
-                                placeholder="Facebook URL"
-                                value={formData.facebook}
-                                onChange={(e) => handleChange("facebook", e.target.value)}
-                            />
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <Twitter className="w-5 h-5 text-sky-500" />
-                            <Input
-                                placeholder="Twitter URL"
-                                value={formData.twitter}
-                                onChange={(e) => handleChange("twitter", e.target.value)}
-                            />
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <Linkedin className="w-5 h-5 text-blue-700" />
-                            <Input
-                                placeholder="LinkedIn URL"
-                                value={formData.linkedin}
-                                onChange={(e) => handleChange("linkedin", e.target.value)}
-                            />
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <Instagram className="w-5 h-5 text-pink-600" />
-                            <Input
-                                placeholder="Instagram URL"
-                                value={formData.instagram}
-                                onChange={(e) => handleChange("instagram", e.target.value)}
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="pt-4">
-                    <Button
-                        onClick={handleSave}
-                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-                    >
-                        Save Contact Information
-                    </Button>
-                </div>
-            </CardContent>
-        </Card>
-    );
+        {/* Save Button */}
+        <div className="pt-4">
+          <button
+            type="submit"
+            className="w-full rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+          >
+            Save Contact Information
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default InstitutionContactForm;
