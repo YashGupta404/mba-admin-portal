@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
+import { set } from "date-fns";
 
 const InstitutionContactForm = () => {
   const [formdata, setformData] = useState({
     address: "123 Education Street, Academic City, AC 12345",
     phone: "+1 (555) 123-4567",
     email: "admissions@mba-institute.edu",
-    officeHours: "Monday - Friday: 9:00 AM - 6:00 PM",
+    officeHours: "9:00 AM - 6:00 PM",
     facebookLink: "https://facebook.com/mba-institute",
     twitterLink: "https://twitter.com/mba-institute",
     linkedinLink: "https://linkedin.com/school/mba-institute",
@@ -27,7 +28,7 @@ const InstitutionContactForm = () => {
     setformData(shallowcopy);
   };
 
-  const handlesubmit =async (e: React.FormEvent<HTMLFormElement>) => {
+  const handlesubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const {
       address,
@@ -63,18 +64,30 @@ const InstitutionContactForm = () => {
           title: "Success",
           description: "College Information updated successfully",
         });
+        setformData({
+          address: "",
+          phone: "",
+          email: "",
+          officeHours: "",
+          facebookLink: "",
+          twitterLink: "",
+          linkedinLink: "",
+          instagramLink: "",
+        });
       }
       if (error) {
         console.log("Error occured while posting data=", error);
         toast({
-            title: "Error",
-            description: "Error occured while updating college information",}); 
+          title: "Error",
+          description: "Error occured while updating college information",
+        });
       }
     } catch (err) {
       console.log("Error with college info form api...", err);
-        toast({
-            title: "Error",
-            description: "Error occured while updating college information",});
+      toast({
+        title: "Error",
+        description: "Error occured while updating college information",
+      });
     }
   };
 
@@ -168,7 +181,7 @@ const InstitutionContactForm = () => {
               },
               {
                 icon: <Linkedin className="w-5 h-5 text-blue-700" />,
-                key: "linkedin",
+                key: "linkedinLink",
                 placeholder: "LinkedIn URL",
               },
               {
