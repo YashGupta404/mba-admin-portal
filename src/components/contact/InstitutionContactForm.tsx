@@ -6,14 +6,14 @@ import { set } from "date-fns";
 
 const InstitutionContactForm = () => {
   const [formdata, setformData] = useState({
-    address: "123 Education Street, Academic City, AC 12345",
-    phone: "+1 (555) 123-4567",
-    email: "admissions@mba-institute.edu",
-    officeHours: "9:00 AM - 6:00 PM",
-    facebookLink: "https://facebook.com/mba-institute",
-    twitterLink: "https://twitter.com/mba-institute",
-    linkedinLink: "https://linkedin.com/school/mba-institute",
-    instagramLink: "https://instagram.com/mba-institute",
+    address: "",
+    phone: "",
+    email: "",
+    officeHours: "",
+    facebookLink: "",
+    twitterLink:"",
+    linkedinLink: "",
+    instagramLink: "",
   });
 
   const handlechange = (
