@@ -5,15 +5,18 @@ import DashboardHeader from "./DashboardHeader";
 
 const DashboardLayout = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex w-full bg-background">
-      <DashboardSidebar 
-        collapsed={sidebarCollapsed} 
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} 
+      <DashboardSidebar
+        collapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        mobileOpen={mobileSidebarOpen}
+        onMobileClose={() => setMobileSidebarOpen(false)}
       />
       <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
-        <DashboardHeader />
+        <DashboardHeader onMenuClick={() => setMobileSidebarOpen(true)} />
         <main className="flex-1 overflow-auto">
           <Outlet />
         </main>
@@ -23,3 +26,4 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
+
