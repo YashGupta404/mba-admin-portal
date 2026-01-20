@@ -9,6 +9,7 @@ import EnquiryStatistics from "@/components/contact/EnquiryStatistics";
 import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import { handledownload } from "@/services/downloadenquireis";
+import { API_URL } from "@/config/api";
 
 const ContactEnquiry = () => {
   const [enquiries, setEnquiries] = useState([]);
@@ -23,7 +24,7 @@ const ContactEnquiry = () => {
   const fetchdataall = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/api/enquiry");
+      const response = await axios.get(`${API_URL}/enquiry`);
       setEnquiries(response.data.enquiry);
     } catch (error) {
       console.log("Error Fetching data" + error);
@@ -41,7 +42,7 @@ const ContactEnquiry = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:5000/api/enquiry/search",
+        `${API_URL}/enquiry/search`,
         {
           params: { search: searchQuery },
         }
@@ -89,7 +90,7 @@ const ContactEnquiry = () => {
       if (enquiry.status !== "new") return;
 
       const response = await axios.put(
-        `http://localhost:5000/api/enquiry/status/${id}`,
+        `${API_URL}/enquiry/status/${id}`,
         {
           status: "in-progress",
         }
@@ -110,7 +111,7 @@ const ContactEnquiry = () => {
   const handledelete = async (id) => {
     try {
       const response = await axios.delete(
-        "http://localhost:5000/api/enquiry/deletespecific/" + id
+        `${API_URL}/enquiry/deletespecific/${id}`
       );
       // Update state to remove the deleted enquiry
       setEnquiries((prev) => prev.filter((e) => e._id !== id));
@@ -135,7 +136,7 @@ const ContactEnquiry = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/enquiry/reply/${id}`,
+        `${API_URL}/enquiry/reply/${id}`,
         {
           reply: replyMessage,
         }
@@ -147,7 +148,7 @@ const ContactEnquiry = () => {
       if (enquiry.status === "responded") return;
 
       const response2 = await axios.put(
-        `http://localhost:5000/api/enquiry/status/${id}`,
+        `${API_URL}/enquiry/status/${id}`,
         {
           status: "responded",
         }
@@ -158,11 +159,11 @@ const ContactEnquiry = () => {
         prev.map((e) =>
           e._id === id
             ? {
-                ...e,
-                reply: replyMessage,
-                replyDate: new Date(),
-                status: "responded",
-              }
+              ...e,
+              reply: replyMessage,
+              replyDate: new Date(),
+              status: "responded",
+            }
             : e
         )
       );

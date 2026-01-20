@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import FacilityCard, { Facility } from "./FacilityCard";
 import CreateFacilityModal, { FacilityFormData } from "./CreateFacilityModal";
 import { toast } from "@/hooks/use-toast";
+import { API_BASE_URL } from "@/config/api";
 
-const API_URL = "http://localhost:5000";
+const API_URL = API_BASE_URL;
 
 const FacilitiesTab = () => {
     const [facilities, setFacilities] = useState<Facility[]>([]);
