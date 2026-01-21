@@ -31,9 +31,9 @@ const StatCard = ({
   onDelete
 }: StatCardProps) => {
   return (
-    <div className="bg-card rounded-xl p-5 border border-border shadow-sm hover:shadow-md transition-shadow duration-200 relative group">
-      {/* Edit/Delete Actions */}
-      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1">
+    <div className="bg-card rounded-xl p-5 border border-border shadow-sm hover:shadow-md transition-shadow duration-200 relative">
+      {/* Edit/Delete Actions - Always visible at bottom right */}
+      <div className="absolute bottom-3 right-3 flex items-center gap-1">
         <Button
           variant="ghost"
           size="icon"
