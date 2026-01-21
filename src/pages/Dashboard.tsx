@@ -205,10 +205,37 @@ const Dashboard = () => {
   const handleDeleteConfirm = () => {
     if (cardToDelete) {
       const cardToRemove = statCards.find(c => c.id === cardToDelete);
+      const cardIndex = statCards.findIndex(c => c.id === cardToDelete);
+
+      // Store the deleted card for potential undo
+      const deletedCard = cardToRemove;
+      const deletedIndex = cardIndex;
+
       setStatCards(cards => cards.filter(card => card.id !== cardToDelete));
+
       toast({
         title: "Card Deleted",
-        description: `"${cardToRemove?.title}" has been removed from the dashboard.`,
+        description: `"${deletedCard?.title}" has been removed.`,
+        action: deletedCard ? (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              // Restore the card at its original position
+              setStatCards(cards => {
+                const newCards = [...cards];
+                newCards.splice(deletedIndex, 0, deletedCard);
+                return newCards;
+              });
+              toast({
+                title: "Undo Successful",
+                description: `"${deletedCard.title}" has been restored.`,
+              });
+            }}
+          >
+            Undo
+          </Button>
+        ) : undefined,
       });
     }
     setIsDeleteDialogOpen(false);

@@ -136,10 +136,37 @@ const DepartmentDistribution = () => {
   const handleDeleteConfirm = () => {
     if (deptToDelete) {
       const deptToRemove = departments.find(d => d.id === deptToDelete);
+      const deptIndex = departments.findIndex(d => d.id === deptToDelete);
+
+      // Store the deleted department for potential undo
+      const deletedDept = deptToRemove;
+      const deletedIndex = deptIndex;
+
       setDepartments(depts => depts.filter(dept => dept.id !== deptToDelete));
+
       toast({
         title: "Department Deleted",
-        description: `"${deptToRemove?.name}" has been removed from the distribution.`,
+        description: `"${deletedDept?.name}" has been removed.`,
+        action: deletedDept ? (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              // Restore the department at its original position
+              setDepartments(depts => {
+                const newDepts = [...depts];
+                newDepts.splice(deletedIndex, 0, deletedDept);
+                return newDepts;
+              });
+              toast({
+                title: "Undo Successful",
+                description: `"${deletedDept.name}" has been restored.`,
+              });
+            }}
+          >
+            Undo
+          </Button>
+        ) : undefined,
       });
     }
     setIsDeleteDialogOpen(false);
