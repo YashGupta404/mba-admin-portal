@@ -1,10 +1,25 @@
-import { Search, Plus } from "lucide-react";
+import { Search, User, Settings, LogOut, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import NotificationsDropdown from "./NotificationsDropdown";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const DashboardHeader = () => {
+  const handleLogout = () => {
+    // Clear any auth tokens/session data
+    localStorage.removeItem('authToken');
+    sessionStorage.clear();
+    // Redirect to login page or home
+    window.location.href = '/';
+  };
+
   return (
     <header className="h-16 bg-card border-b border-border px-6 flex items-center justify-between sticky top-0 z-10">
       {/* Breadcrumb */}
@@ -36,21 +51,46 @@ const DashboardHeader = () => {
         {/* Notifications */}
         <NotificationsDropdown />
 
-        {/* Add button */}
-        <Button variant="ghost" size="icon">
-          <Plus className="w-5 h-5 text-muted-foreground" />
-        </Button>
-
-        {/* User profile */}
-        <div className="flex items-center gap-3 pl-4 border-l border-border">
-          <div className="text-right">
-            <p className="text-sm font-medium text-foreground">Admin User</p>
-            <p className="text-xs text-muted-foreground">Super Admin</p>
-          </div>
-          <Avatar className="h-10 w-10 bg-primary">
-            <AvatarFallback className="bg-primary text-primary-foreground font-semibold">A</AvatarFallback>
-          </Avatar>
-        </div>
+        {/* User profile with dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="flex items-center gap-3 pl-4 border-l border-border cursor-pointer hover:opacity-80 transition-opacity">
+              <div className="text-right">
+                <p className="text-sm font-medium text-foreground">Admin User</p>
+                <p className="text-xs text-muted-foreground">Super Admin</p>
+              </div>
+              <Avatar className="h-10 w-10 bg-primary">
+                <AvatarFallback className="bg-primary text-primary-foreground font-semibold">A</AvatarFallback>
+              </Avatar>
+              <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">Admin User</p>
+                <p className="text-xs leading-none text-muted-foreground">admin@institution.edu</p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer">
+              <User className="mr-2 h-4 w-4" />
+              <span>My Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+              onClick={handleLogout}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Logout</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );

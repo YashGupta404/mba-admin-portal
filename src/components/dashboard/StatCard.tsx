@@ -1,18 +1,57 @@
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, Edit2, Trash2, MoreVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 interface StatCardProps {
+  id?: string;
   title: string;
   value: string;
   change: string;
   changePositive?: boolean;
   icon: LucideIcon;
   iconColorClass: string;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-const StatCard = ({ title, value, change, changePositive = true, icon: Icon, iconColorClass }: StatCardProps) => {
+const StatCard = ({
+  title,
+  value,
+  change,
+  changePositive = true,
+  icon: Icon,
+  iconColorClass,
+  onEdit,
+  onDelete
+}: StatCardProps) => {
   return (
-    <div className="bg-card rounded-xl p-5 border border-border shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-card rounded-xl p-5 border border-border shadow-sm hover:shadow-md transition-shadow duration-200 relative group">
+      {/* Edit/Delete Actions */}
+      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 text-muted-foreground hover:text-primary hover:bg-primary/10"
+          onClick={onEdit}
+        >
+          <Edit2 className="w-3.5 h-3.5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+          onClick={onDelete}
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </Button>
+      </div>
+
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-muted-foreground mb-1">{title}</p>
