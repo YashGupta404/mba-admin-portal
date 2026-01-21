@@ -6,8 +6,9 @@ import EventCategories from "./EventCategories";
 import EventCard, { Event } from "./EventCard";
 import CreateEventModal, { EventFormData } from "./CreateEventModal";
 import { toast } from "@/hooks/use-toast";
+import { API_BASE_URL } from "@/config/api";
 
-const API_URL = "http://localhost:5000";
+const API_URL = API_BASE_URL;
 
 const EventsTab = () => {
     const [events, setEvents] = useState<Event[]>([]);

@@ -1,6 +1,7 @@
-// Faculty API Service - Calls existing backend at localhost:5000
+// Faculty API Service - Calls backend API
+import { API_URL } from '@/config/api';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = API_URL;
 
 // Faculty interface matching your backend schema
 export interface Faculty {
