@@ -12,23 +12,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-<<<<<<< HEAD
-const DashboardHeader = () => {
-  const handleLogout = () => {
-    // Clear any auth tokens/session data
-    localStorage.removeItem('authToken');
-    sessionStorage.clear();
-    // Redirect to login page or home
-    window.location.href = '/';
-  };
-
-=======
 interface DashboardHeaderProps {
   onMenuClick?: () => void;
 }
 
 const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
->>>>>>> 5506d69cdcdc159777582ee989e20c0dfd46eec1
   return (
     <header className="h-14 lg:h-16 bg-card border-b border-border px-3 lg:px-6 flex items-center justify-between sticky top-0 z-10">
       {/* Left section - Menu button and Breadcrumb */}
@@ -73,48 +61,6 @@ const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
         {/* Notifications */}
         <NotificationsDropdown />
 
-<<<<<<< HEAD
-        {/* User profile with dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className="flex items-center gap-3 pl-4 border-l border-border cursor-pointer hover:opacity-80 transition-opacity">
-              <div className="text-right">
-                <p className="text-sm font-medium text-foreground">Admin User</p>
-                <p className="text-xs text-muted-foreground">Super Admin</p>
-              </div>
-              <Avatar className="h-10 w-10 bg-primary">
-                <AvatarFallback className="bg-primary text-primary-foreground font-semibold">A</AvatarFallback>
-              </Avatar>
-              <ChevronDown className="w-4 h-4 text-muted-foreground" />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Admin User</p>
-                <p className="text-xs leading-none text-muted-foreground">admin@institution.edu</p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">
-              <User className="mr-2 h-4 w-4" />
-              <span>My Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
-              onClick={handleLogout}
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Logout</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-=======
         {/* Add button - hidden on mobile */}
         <Button variant="ghost" size="icon" className="hidden sm:flex">
           <Plus className="w-5 h-5 text-muted-foreground" />
@@ -131,7 +77,6 @@ const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
             <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-sm lg:text-base">A</AvatarFallback>
           </Avatar>
         </div>
->>>>>>> 5506d69cdcdc159777582ee989e20c0dfd46eec1
       </div>
     </header>
   );
