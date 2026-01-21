@@ -10,7 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import axios from "axios";
 import { handledownload } from "@/services/downloadenquireis";
-import { set } from "date-fns";
+import { API_URL } from "@/config/api";
 
 const ContactEnquiry = () => {
   const isMobile = useIsMobile();
@@ -79,24 +79,24 @@ const ContactEnquiry = () => {
 
   // Filter enquiries based on status dropdown
   useEffect(() => {
-  let result = [...enquiries];
+    let result = [...enquiries];
 
-  // 1️⃣ Filter by status
-  if (status !== "all") {
-    result = result.filter((e) => e.status === status);
-  }
+    // 1️⃣ Filter by status
+    if (status !== "all") {
+      result = result.filter((e) => e.status === status);
+    }
 
-  // 2️⃣ Sort by date
-  if (sort === "datenewest") {
-    result.sort((a, b) => new Date(a.date) - new Date(b.date));
-  } else if (sort === "datenewest") {
-    result.sort((a, b) => new Date(b.date) - new Date(a.date));
-  }
+    // 2️⃣ Sort by date
+    if (sort === "datenewest") {
+      result.sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else if (sort === "datenewest") {
+      result.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
 
-  // 3️⃣ Update once
-  setFilteredEnquiries(result);
+    // 3️⃣ Update once
+    setFilteredEnquiries(result);
 
-}, [status, enquiries, sort]);
+  }, [status, enquiries, sort]);
 
 
   //updates status on viewing details
